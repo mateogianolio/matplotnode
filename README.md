@@ -23,4 +23,4 @@ $ npm install matplotnode
 - [x] `xlabel(name)`
 - [x] `ylabel(name)`
 
-** See how `kwargs` are implemented in `test.js`*
+**See how `kwargs` are implemented in `test.js`*
