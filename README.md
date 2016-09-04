@@ -24,3 +24,5 @@ $ npm install matplotnode
 - [x] `ylabel(name)`
 
 **See how `kwargs` are implemented in `test.js`*
+
+![subplot example](examples/subplot.png)
