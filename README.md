@@ -25,4 +25,8 @@ $ npm install matplotnode
 
 **See how `kwargs` are implemented in `test.js`*
 
+### Example
+
+Output from `test.js`.
+
 ![subplot example](examples/subplot.png)
