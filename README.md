@@ -8,7 +8,19 @@ C++ bindings for Node.js exposing a subset of [matplotlib](http://matplotlib.org
 $ npm install matplotnode
 ```
 
-
 ### Bindings
 
-[x] `plot([x], y, ...kwargs)`
+[x] `plot([x], y, ...kwargs)`*
+[x] `subplot(str)`
+[x] `show()`
+[x] `legend()`
+[x] `grid(bool active)`
+[x] `save(filename)`
+[x] `xlim(from, to)`
+[x] `ylim(from, to)`
+[x] `title(name)`
+[x] `axis(axis)`
+[x] `xlabel(name)`
+[x] `ylabel(name)`
+
+** See how `kwargs` are implemented in `test.js`*

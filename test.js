@@ -18,6 +18,7 @@
 	plt.subplot("313");
 	plt.plot(x, x.map(Math.tan), 'color=b', 'label=tan(x)', 'marker=o', 'linestyle=None');
 	plt.legend();
+	plt.grid(true);
 	plt.ylim(-5, 5);
 
 	plt.show();

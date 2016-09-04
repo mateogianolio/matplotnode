@@ -60,7 +60,13 @@ namespace plt {
 	}
 
 	void grid(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		PyObject *result = PyObject_CallObject(interpreter::get().grid, interpreter::get().empty_tuple);
+		PyObject *flag = info[0]->BooleanValue() ? Py_True : Py_False;
+		PyObject *args = PyTuple_New(1);
+		PyTuple_SetItem(args, 0, flag);
+
+		PyObject *result = PyObject_CallObject(interpreter::get().grid, args);
+		Py_DECREF(flag);
+		Py_DECREF(args);
 		Py_XDECREF(result);
 	}
 

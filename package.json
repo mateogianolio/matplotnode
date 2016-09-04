@@ -1,0 +1,26 @@
+{
+  "name": "matplotnode",
+  "version": "0.1.0",
+  "description": "C++ bindings for Node.js exposing a subset of matplotlib's functionality through the CPython API.",
+  "main": "test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "node-gyp configure rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mateogianolio/matplotnode.git"
+  },
+  "keywords": [
+    "matplotlib",
+    "pyplot",
+    "python"
+  ],
+  "author": "Mateo Gianolio",
+  "license": "MIT",
+  "gypfile": true,
+  "bugs": {
+    "url": "https://github.com/mateogianolio/matplotnode/issues"
+  },
+  "homepage": "https://github.com/mateogianolio/matplotnode#readme"
+}
