@@ -18,5 +18,5 @@
 	plt.grid(true);
 	plt.ylim(-5, 5);
 
-	plt.save("./examples/subplot.png");
+  plt.save("./examples/subplot.png");
 }());
