@@ -65,7 +65,7 @@ namespace plt {
 		PyTuple_SetItem(args, 0, flag);
 
 		PyObject *result = PyObject_CallObject(interpreter::get().grid, args);
-		Py_DECREF(flag);
+		
 		Py_DECREF(args);
 		Py_XDECREF(result);
 	}
@@ -91,7 +91,6 @@ namespace plt {
 
 		PyObject *result = PyObject_CallObject(interpreter::get().xlim, args);
 
-		Py_DECREF(list);
 		Py_DECREF(args);
 		Py_XDECREF(result);
 	}
@@ -106,7 +105,6 @@ namespace plt {
 
 		PyObject *result = PyObject_CallObject(interpreter::get().ylim, args);
 		
-		Py_DECREF(list);
 		Py_DECREF(args);
 		Py_XDECREF(result);
 	}
