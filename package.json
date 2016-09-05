@@ -1,8 +1,8 @@
 {
   "name": "matplotnode",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "C++ bindings for Node.js exposing a subset of matplotlib's functionality through the CPython API.",
-  "main": "test.js",
+  "main": "matplotnode.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "install": "node-gyp configure rebuild"

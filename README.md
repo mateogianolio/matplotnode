@@ -8,6 +8,10 @@ C++ bindings for Node.js exposing a subset of [matplotlib](http://matplotlib.org
 $ npm install matplotnode
 ```
 
+```javascript
+var plt = require('matplotnode');
+```
+
 ### Bindings
 
 - [x] `plot([x], y, ...kwargs)`*
