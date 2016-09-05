@@ -17,6 +17,7 @@ You need to have Python 2.7 and matplotlib installed for the bindings to work.
 ### Bindings
 
 - [x] `plot([x], y, ...kwargs)`*
+- [ ] `scatter(x, y, ...kwargs)`*
 - [x] `subplot(str)`
 - [x] `show()`
 - [x] `legend()`

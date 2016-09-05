@@ -2,7 +2,7 @@
   "targets": [
     {
       "target_name": "matplotlib",
-      "sources": [ "matplotlib.cc" ],
+      "sources": [ "src/matplotlib.cc" ],
       "libraries": [ "-lpython2.7" ]
     }
   ]
