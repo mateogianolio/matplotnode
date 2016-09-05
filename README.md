@@ -12,6 +12,8 @@ $ npm install matplotnode
 var plt = require('matplotnode');
 ```
 
+You need to have Python 2.7 and matplotlib installed for the bindings to work.
+
 ### Bindings
 
 - [x] `plot([x], y, ...kwargs)`*
