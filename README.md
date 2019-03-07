@@ -58,3 +58,15 @@ plt.save('./examples/subplot.png');
 ```
 
 ![subplot example](examples/subplot.png)
+
+
+```javascript
+const plt = require('matplotlib');
+const x = new Array(100).fill(0).map((x, i) => i / Math.PI);
+
+plt.plot(x, x.map(Math.sin));
+plt.grid(true);
+plt.show();
+```
+
+![show example](examples/show.png)
