@@ -27,6 +27,7 @@ namespace plt {
 		PyObject *clf;
 		PyObject *cla;
 		PyObject *close;
+		PyObject *xkcd;
 
 		PyObject *empty_tuple;
 
@@ -59,6 +60,7 @@ namespace plt {
 			show = PyObject_GetAttrString(pyplot, "show");
 			legend = PyObject_GetAttrString(pyplot, "legend");
 			grid = PyObject_GetAttrString(pyplot, "grid");
+			save = PyObject_GetAttrString(pyplot, "savefig");
 			xlim = PyObject_GetAttrString(pyplot, "xlim");
 			ylim = PyObject_GetAttrString(pyplot, "ylim");
 			title = PyObject_GetAttrString(pyplot, "title");
@@ -68,7 +70,7 @@ namespace plt {
 			clf = PyObject_GetAttrString(pyplot, "clf");
 			cla = PyObject_GetAttrString(pyplot, "cla");
 			close = PyObject_GetAttrString(pyplot, "close");
-			save = PyObject_GetAttrString(pyplot, "savefig");
+			xkcd = PyObject_GetAttrString(pyplot, "xkcd");
 
 			if (!plot
 				|| !subplot
@@ -84,7 +86,8 @@ namespace plt {
 				|| !ylabel
 				|| !clf
 				|| !cla
-				|| !close) {
+				|| !close
+				|| !xkcd) {
 				fprintf(stderr, "Error loading matplotlib functions.\n");
 				return;
 			}
@@ -103,7 +106,8 @@ namespace plt {
 				|| !PyCallable_Check(ylabel)
 				|| !PyCallable_Check(clf)
 				|| !PyCallable_Check(cla)
-				|| !PyCallable_Check(close)) {
+				|| !PyCallable_Check(close)
+				|| !PyCallable_Check(xkcd)) {
 				fprintf(stderr, "One or more of the matplotlib functions are not callable.\n");
 				return;
 			}
@@ -131,6 +135,7 @@ namespace plt {
 	void clf(v8::FunctionCallbackInfo<v8::Value>& info);
 	void cla(v8::FunctionCallbackInfo<v8::Value>& info);
 	void close(v8::FunctionCallbackInfo<v8::Value>& info);
+	void xkcd(v8::FunctionCallbackInfo<v8::Value>& info);
 }
 
 #endif

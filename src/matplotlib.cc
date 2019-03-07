@@ -181,6 +181,14 @@ namespace plt {
 		PyObject *result = PyObject_CallObject(interpreter::get().close, interpreter::get().empty_tuple);
 		Py_XDECREF(result);
 	}
+
+	void xkcd(const v8::FunctionCallbackInfo<v8::Value>& info) {
+    PyObject *kwargs = PyDict_New();
+    PyObject *result = PyObject_Call(interpreter::get().xkcd, interpreter::get().empty_tuple, kwargs);
+
+    Py_DECREF(kwargs);
+    Py_DECREF(result);
+	}
 }
 
 void init(v8::Local<v8::Object> exports) {
@@ -199,6 +207,7 @@ void init(v8::Local<v8::Object> exports) {
 	NODE_SET_METHOD(exports, "clf", plt::clf);
 	NODE_SET_METHOD(exports, "cla", plt::cla);
 	NODE_SET_METHOD(exports, "close", plt::close);
+	NODE_SET_METHOD(exports, "xkcd", plt::xkcd);
 }
 
 NODE_MODULE(matplotlib, init)
