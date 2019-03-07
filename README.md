@@ -1,6 +1,11 @@
-# matplotlib plotting for node.js
+# matplotnode
 
 C++ bindings for Node.js exposing a subset of [matplotlib](http://matplotlib.org/)'s functionality through the [CPython API](https://docs.python.org/2/extending/embedding.html). Inspired by [matplotlib-cpp](https://github.com/lava/matplotlib-cpp) by [lava](https://github.com/lava). Useful for scientific plotting.
+
+### Requirements
+
+* Python 2.7
+* [matplotlib](http://matplotlib.org/)
 
 ### Usage
 
@@ -9,15 +14,12 @@ $ npm install matplotnode
 ```
 
 ```javascript
-var plt = require('matplotnode');
+const plt = require('matplotnode');
 ```
-
-You need to have Python 2.7 and matplotlib installed for the bindings to work.
 
 ### Bindings
 
 - [x] `plot([x], y, ...kwargs)`*
-- [ ] `scatter(x, y, ...kwargs)`*
 - [x] `subplot(str)`
 - [x] `show()`
 - [x] `legend()`
@@ -29,11 +31,30 @@ You need to have Python 2.7 and matplotlib installed for the bindings to work.
 - [x] `axis(axis)`
 - [x] `xlabel(name)`
 - [x] `ylabel(name)`
+- [x] `clf()`
+- [x] `cla()`
+- [x] `close()`
 
 **See how `kwargs` are implemented in `test.js`*
 
 ### Example
 
-Output from `test.js`.
+```javascript
+const plt = require('matplotlib');
+const x = new Array(100).fill(0).map((x, i) => i / Math.PI);
+
+plt.subplot('211');
+plt.plot(x, x.map(Math.sin), 'color=r', 'label=sin(x)');
+plt.plot(x, x.map(Math.cos), 'color=g', 'label=cos(x)');
+plt.legend();
+
+plt.subplot('212');
+plt.plot(x, x.map(Math.tan), 'color=b', 'label=tan(x)', 'marker=o', 'linestyle=None');
+plt.legend();
+plt.grid(true);
+plt.ylim(-5, 5);
+
+plt.save('./examples/subplot.png');
+```
 
 ![subplot example](examples/subplot.png)

@@ -20,6 +20,9 @@ namespace plt {
 		PyObject *axis;
 		PyObject *xlabel;
 		PyObject *ylabel;
+		PyObject *clf;
+		PyObject *cla;
+		PyObject *close;
 
 		PyObject *empty_tuple;
 
@@ -37,12 +40,6 @@ namespace plt {
 				return;
 			}
 
-			PyObject *pylab = PyImport_Import(PyString_FromString("pylab"));
-			if (!pylab) {
-				fprintf(stderr, "Could not import pylab.\n");
-				return;
-			}
-
 			plot = PyObject_GetAttrString(pyplot, "plot");
 			subplot = PyObject_GetAttrString(pyplot, "subplot");
 			show = PyObject_GetAttrString(pyplot, "show");
@@ -54,40 +51,47 @@ namespace plt {
 			axis = PyObject_GetAttrString(pyplot, "axis");
 			xlabel = PyObject_GetAttrString(pyplot, "xlabel");
 			ylabel = PyObject_GetAttrString(pyplot, "ylabel");
-
-			save = PyObject_GetAttrString(pylab, "savefig");
+			clf = PyObject_GetAttrString(pyplot, "clf");
+			cla = PyObject_GetAttrString(pyplot, "cla");
+			close = PyObject_GetAttrString(pyplot, "close");
+			save = PyObject_GetAttrString(pyplot, "savefig");
 
 			Py_DECREF(pyplot);
-			Py_DECREF(pylab);
 
-			if (!plot ||
-				!subplot ||
-				!show ||
-				!legend ||
-				!grid ||
-				!save ||
-				!xlim ||
-				!ylim ||
-				!title ||
-				!axis ||
-				!xlabel ||
-				!ylabel) {
+			if (!plot
+				|| !subplot
+				|| !show
+				|| !legend
+				|| !grid
+				|| !save
+				|| !xlim
+				|| !ylim
+				|| !title
+				|| !axis
+				|| !xlabel
+				|| !ylabel
+				|| !clf
+				|| !cla
+				|| !close) {
 				fprintf(stderr, "Error loading matplotlib functions.\n");
 				return;
 			}
 
-			if (!PyCallable_Check(plot) ||
-				!PyCallable_Check(subplot) ||
-				!PyCallable_Check(show) ||
-				!PyCallable_Check(legend) ||
-				!PyCallable_Check(grid) ||
-				!PyCallable_Check(save) ||
-				!PyCallable_Check(xlim) ||
-				!PyCallable_Check(ylim) ||
-				!PyCallable_Check(title) ||
-				!PyCallable_Check(axis) ||
-				!PyCallable_Check(xlabel) ||
-				!PyCallable_Check(ylabel)) {
+			if (!PyCallable_Check(plot)
+				|| !PyCallable_Check(subplot)
+				|| !PyCallable_Check(show)
+				|| !PyCallable_Check(legend)
+				|| !PyCallable_Check(grid)
+				|| !PyCallable_Check(save)
+				|| !PyCallable_Check(xlim)
+				|| !PyCallable_Check(ylim)
+				|| !PyCallable_Check(title)
+				|| !PyCallable_Check(axis)
+				|| !PyCallable_Check(xlabel)
+				|| !PyCallable_Check(ylabel)
+				|| !PyCallable_Check(clf)
+				|| !PyCallable_Check(cla)
+				|| !PyCallable_Check(close)) {
 				fprintf(stderr, "One or more of the matplotlib functions are not callable.\n");
 				return;
 			}
@@ -108,6 +112,9 @@ namespace plt {
 			Py_DECREF(axis);
 			Py_DECREF(xlabel);
 			Py_DECREF(ylabel);
+			Py_DECREF(clf);
+			Py_DECREF(cla);
+			Py_DECREF(close);
 			Py_DECREF(empty_tuple);
 			Py_Finalize();
 		}
@@ -125,6 +132,9 @@ namespace plt {
 	void axis(v8::FunctionCallbackInfo<v8::Value>& info);
 	void xlabel(v8::FunctionCallbackInfo<v8::Value>& info);
 	void ylabel(v8::FunctionCallbackInfo<v8::Value>& info);
+	void clf(v8::FunctionCallbackInfo<v8::Value>& info);
+	void cla(v8::FunctionCallbackInfo<v8::Value>& info);
+	void close(v8::FunctionCallbackInfo<v8::Value>& info);
 }
 
 #endif

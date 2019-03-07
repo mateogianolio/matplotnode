@@ -2,6 +2,8 @@
 
 namespace plt {
 	void plot(const v8::FunctionCallbackInfo<v8::Value>& info) {
+		v8::Isolate* isolate = info.GetIsolate();
+
 		PyObject *args, *kwargs, *data, *result;
 		uint32_t arglen = info.Length();
 		uint32_t datalen;
@@ -11,7 +13,7 @@ namespace plt {
 
 		for (uint32_t i = 0; i < arglen; i++) {
 			if (info[i]->IsString()) {
-				std::string s = std::string(*v8::String::Utf8Value(info[i]->ToString()));
+				std::string s = std::string(*v8::String::Utf8Value(isolate, info[i]->ToString()));
 
 				unsigned long eq = s.find("=");
 				if (eq != std::string::npos) {
@@ -39,7 +41,9 @@ namespace plt {
 	}
 
 	void subplot(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		std::string s = std::string(*v8::String::Utf8Value(info[0]->ToString()));
+		v8::Isolate* isolate = info.GetIsolate();
+
+		std::string s = std::string(*v8::String::Utf8Value(isolate, info[0]->ToString()));
 		PyObject *args = PyTuple_New(1);
 		PyTuple_SetItem(args, 0, PyString_FromString(s.c_str()));
 
@@ -71,7 +75,9 @@ namespace plt {
 	}
 
 	void save(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		std::string s = std::string(*v8::String::Utf8Value(info[0]->ToString()));
+		v8::Isolate* isolate = info.GetIsolate();
+
+		std::string s = std::string(*v8::String::Utf8Value(isolate, info[0]->ToString()));
 		PyObject *args = PyTuple_New(1);
 		PyTuple_SetItem(args, 0, PyString_FromString(s.c_str()));
 
@@ -110,7 +116,9 @@ namespace plt {
 	}
 
 	void title(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		std::string s = std::string(*v8::String::Utf8Value(info[0]->ToString()));
+		v8::Isolate* isolate = info.GetIsolate();
+
+		std::string s = std::string(*v8::String::Utf8Value(isolate, info[0]->ToString()));
 		PyObject *args = PyTuple_New(1);
 		PyTuple_SetItem(args, 0, PyString_FromString(s.c_str()));
 
@@ -121,7 +129,9 @@ namespace plt {
 	}
 
 	void axis(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		std::string s = std::string(*v8::String::Utf8Value(info[0]->ToString()));
+		v8::Isolate* isolate = info.GetIsolate();
+
+		std::string s = std::string(*v8::String::Utf8Value(isolate, info[0]->ToString()));
 		PyObject *args = PyTuple_New(1);
 		PyTuple_SetItem(args, 0, PyString_FromString(s.c_str()));
 
@@ -132,7 +142,9 @@ namespace plt {
 	}
 
 	void xlabel(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		std::string s = std::string(*v8::String::Utf8Value(info[0]->ToString()));
+		v8::Isolate* isolate = info.GetIsolate();
+
+		std::string s = std::string(*v8::String::Utf8Value(isolate, info[0]->ToString()));
 		PyObject *args = PyTuple_New(1);
 		PyTuple_SetItem(args, 0, PyString_FromString(s.c_str()));
 
@@ -143,13 +155,30 @@ namespace plt {
 	}
 
 	void ylabel(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		std::string s = std::string(*v8::String::Utf8Value(info[0]->ToString()));
+		v8::Isolate* isolate = info.GetIsolate();
+
+		std::string s = std::string(*v8::String::Utf8Value(isolate, info[0]->ToString()));
 		PyObject *args = PyTuple_New(1);
 		PyTuple_SetItem(args, 0, PyString_FromString(s.c_str()));
 
 		PyObject *result = PyObject_CallObject(interpreter::get().ylabel, args);
 
 		Py_DECREF(args);
+		Py_XDECREF(result);
+	}
+
+	void clf(const v8::FunctionCallbackInfo<v8::Value>& info) {
+		PyObject *result = PyObject_CallObject(interpreter::get().clf, interpreter::get().empty_tuple);
+		Py_XDECREF(result);
+	}
+
+	void cla(const v8::FunctionCallbackInfo<v8::Value>& info) {
+		PyObject *result = PyObject_CallObject(interpreter::get().cla, interpreter::get().empty_tuple);
+		Py_XDECREF(result);
+	}
+
+	void close(const v8::FunctionCallbackInfo<v8::Value>& info) {
+		PyObject *result = PyObject_CallObject(interpreter::get().close, interpreter::get().empty_tuple);
 		Py_XDECREF(result);
 	}
 }
@@ -167,6 +196,9 @@ void init(v8::Local<v8::Object> exports) {
 	NODE_SET_METHOD(exports, "axis", plt::axis);
 	NODE_SET_METHOD(exports, "xlabel", plt::xlabel);
 	NODE_SET_METHOD(exports, "ylabel", plt::ylabel);
+	NODE_SET_METHOD(exports, "clf", plt::clf);
+	NODE_SET_METHOD(exports, "cla", plt::cla);
+	NODE_SET_METHOD(exports, "close", plt::close);
 }
 
 NODE_MODULE(matplotlib, init)
