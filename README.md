@@ -4,7 +4,7 @@ C++ bindings for Node.js exposing a subset of [matplotlib](http://matplotlib.org
 
 ### Requirements
 
-* Python 2.7
+* Python 2.7 (might work on Python 3, not tested yet)
 * [matplotlib](http://matplotlib.org/)
 
 ### Usage

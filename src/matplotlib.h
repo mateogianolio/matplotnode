@@ -3,7 +3,11 @@
 
 #include <node.h>
 #include <string>
-#include <python2.7/Python.h>
+#include <Python.h>
+
+#if PY_MAJOR_VERSION >= 3
+	#define PyString_FromString PyUnicode_FromString
+#endif
 
 namespace plt {
 	struct interpreter {
@@ -32,9 +36,19 @@ namespace plt {
 		}
 	private:
 		interpreter() {
+#if PY_MAJOR_VERSION >= 3
+			wchar_t name[] = L"matplotnode";
+#else
+			char name[] = "matplotnode";
+#endif
+			Py_SetProgramName(name);
 			Py_Initialize();
 
-			PyObject *pyplot = PyImport_Import(PyString_FromString("matplotlib.pyplot"));
+			PyObject *pyplotname = PyString_FromString("matplotlib.pyplot");
+			PyObject *pyplot = PyImport_Import(pyplotname);
+
+			Py_DECREF(pyplotname);
+
 			if (!pyplot) {
 				fprintf(stderr, "Could not import matplotlib.pyplot.\n");
 				return;
@@ -55,8 +69,6 @@ namespace plt {
 			cla = PyObject_GetAttrString(pyplot, "cla");
 			close = PyObject_GetAttrString(pyplot, "close");
 			save = PyObject_GetAttrString(pyplot, "savefig");
-
-			Py_DECREF(pyplot);
 
 			if (!plot
 				|| !subplot
@@ -100,22 +112,6 @@ namespace plt {
 		}
 
 		~interpreter() {
-			Py_DECREF(plot);
-			Py_DECREF(subplot);
-			Py_DECREF(show);
-			Py_DECREF(legend);
-			Py_DECREF(grid);
-			Py_DECREF(save);
-			Py_DECREF(xlim);
-			Py_DECREF(ylim);
-			Py_DECREF(title);
-			Py_DECREF(axis);
-			Py_DECREF(xlabel);
-			Py_DECREF(ylabel);
-			Py_DECREF(clf);
-			Py_DECREF(cla);
-			Py_DECREF(close);
-			Py_DECREF(empty_tuple);
 			Py_Finalize();
 		}
 	};
