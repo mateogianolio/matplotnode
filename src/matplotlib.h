@@ -45,12 +45,23 @@ namespace plt {
 			Py_SetProgramName(name);
 			Py_Initialize();
 
+			PyObject *matplotlibname = PyString_FromString("matplotlib");
+			PyObject* matplotlib = PyImport_Import(matplotlibname);
+			Py_DECREF(matplotlibname);
+			if (!matplotlib) {
+				PyErr_Print();
+				fprintf(stderr, "Could not import matplotlib.pyplot.\n");
+				return;
+			}
+
+			PyObject_CallMethod(matplotlib, const_cast<char*>("use"), const_cast<char*>("s"), "TkAgg");
+
 			PyObject *pyplotname = PyString_FromString("matplotlib.pyplot");
 			PyObject *pyplot = PyImport_Import(pyplotname);
-
 			Py_DECREF(pyplotname);
 
 			if (!pyplot) {
+				PyErr_Print();
 				fprintf(stderr, "Could not import matplotlib.pyplot.\n");
 				return;
 			}
@@ -88,6 +99,7 @@ namespace plt {
 				|| !cla
 				|| !close
 				|| !xkcd) {
+				PyErr_Print();
 				fprintf(stderr, "Error loading matplotlib functions.\n");
 				return;
 			}
@@ -108,6 +120,7 @@ namespace plt {
 				|| !PyCallable_Check(cla)
 				|| !PyCallable_Check(close)
 				|| !PyCallable_Check(xkcd)) {
+				PyErr_Print();
 				fprintf(stderr, "One or more of the matplotlib functions are not callable.\n");
 				return;
 			}
