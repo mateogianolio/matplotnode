@@ -1,6 +1,6 @@
 {
   "name": "matplotnode",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "C++ bindings for Node.js exposing a subset of matplotlib's functionality through the CPython API.",
   "main": "src/matplotlib.js",
   "scripts": {
