@@ -9,6 +9,11 @@
 	#define PyString_FromString PyUnicode_FromString
 #endif
 
+#ifndef WITHOUT_NUMPY
+#  define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
+#  include <numpy/arrayobject.h>
+#endif // WITHOUT_NUMPY
+
 namespace plt {
 	struct interpreter {
 	public:
@@ -36,6 +41,22 @@ namespace plt {
 			return context;
 		}
 	private:
+#ifndef WITHOUT_NUMPY
+#  if PY_MAJOR_VERSION >= 3
+
+    void *import_numpy() {
+        import_array(); // initialize C-API
+        return NULL;
+    }
+
+#  else
+
+    void import_numpy() {
+        import_array(); // initialize C-API
+    }
+
+#  endif
+#endif
 		interpreter() {
 #if PY_MAJOR_VERSION >= 3
 			wchar_t name[] = L"matplotnode";
@@ -44,6 +65,10 @@ namespace plt {
 #endif
 			Py_SetProgramName(name);
 			Py_Initialize();
+
+#ifndef WITHOUT_NUMPY
+        import_numpy(); // initialize numpy C-API
+#endif
 
 			PyObject *matplotlibname = PyString_FromString("matplotlib");
 			PyObject* matplotlib = PyImport_Import(matplotlibname);
