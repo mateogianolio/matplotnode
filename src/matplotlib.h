@@ -64,6 +64,11 @@ namespace plt {
 			char name[] = "matplotnode";
 #endif
 			Py_SetProgramName(name);
+
+#ifdef linux
+			dlopen("libpython2.7.so", RTLD_LAZY | RTLD_GLOBAL);
+#endif
+
 			Py_Initialize();
 
 #ifndef WITHOUT_NUMPY
