@@ -70,7 +70,11 @@ namespace plt {
 			Py_SetProgramName(name);
 
 #ifdef linux
+#if PY_MAJOR_VERSION >= 3
+			dlopen("libpython3.so", RTLD_LAZY | RTLD_GLOBAL);
+#else
 			dlopen("libpython2.7.so", RTLD_LAZY | RTLD_GLOBAL);
+#endif
 #endif
 
 			Py_Initialize();
