@@ -6,6 +6,9 @@
       "include_dirs": [
         "<!(python -c 'import numpy; print(numpy.get_include())')"
       ],
+      "libraries": [
+        "-ldl"
+      ],
       "conditions": [
         ['OS=="mac"', {
             "xcode_settings": {
@@ -22,7 +25,6 @@
           ],
           "libraries": [
             "<!(python-config --libs)",
-            "-ldl"
           ]
         }]
       ]
