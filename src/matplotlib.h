@@ -5,13 +5,17 @@
 #include <string>
 #include <Python.h>
 
+#ifdef linux
+	#include <dlfcn.h>
+#endif
+
 #if PY_MAJOR_VERSION >= 3
 	#define PyString_FromString PyUnicode_FromString
 #endif
 
 #ifndef WITHOUT_NUMPY
-#  define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
-#  include <numpy/arrayobject.h>
+	#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
+	#include <numpy/arrayobject.h>
 #endif // WITHOUT_NUMPY
 
 namespace plt {

@@ -21,7 +21,8 @@
             "<!(python-config --cflags)"
           ],
           "libraries": [
-            "<!(python-config --libs)"
+            "<!(python-config --libs)",
+            "-ldl"
           ]
         }]
       ]
