@@ -13,7 +13,7 @@ namespace plt {
 
 		for (uint32_t i = 0; i < arglen; i++) {
 			if (info[i]->IsString()) {
-				std::string s = std::string(*v8::String::Utf8Value(isolate, info[i]->ToString()));
+				std::string s = std::string(*v8::String::Utf8Value(isolate, info[i].As<v8::String>()));
 
 				unsigned long eq = s.find("=");
 				if (eq != std::string::npos) {
@@ -28,7 +28,7 @@ namespace plt {
 				data = PyList_New(datalen);
 
 				for (uint32_t j = 0; j < datalen; j++)
-					PyList_SetItem(data, j, PyFloat_FromDouble(array->Get(j)->NumberValue()));
+					PyList_SetItem(data, j, PyFloat_FromDouble(array->Get(isolate->GetCurrentContext(), j).ToLocalChecked().As<v8::Number>()->Value()));
 				PyTuple_SetItem(args, i, data);
 			}
 		}
@@ -43,7 +43,7 @@ namespace plt {
 	void subplot(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		std::string s = std::string(*v8::String::Utf8Value(isolate, info[0]->ToString()));
+		std::string s = std::string(*v8::String::Utf8Value(isolate, info[0].As<v8::String>()));
 		PyObject *args = PyTuple_New(1);
 		PyTuple_SetItem(args, 0, PyString_FromString(s.c_str()));
 
@@ -64,7 +64,7 @@ namespace plt {
 	}
 
 	void grid(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		PyObject *flag = info[0]->BooleanValue() ? Py_True : Py_False;
+		PyObject *flag = info[0].As<v8::Boolean>()->Value() ? Py_True : Py_False;
 		PyObject *args = PyTuple_New(1);
 		PyTuple_SetItem(args, 0, flag);
 
@@ -77,7 +77,7 @@ namespace plt {
 	void save(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		std::string s = std::string(*v8::String::Utf8Value(isolate, info[0]->ToString()));
+		std::string s = std::string(*v8::String::Utf8Value(isolate, info[0].As<v8::String>()));
 		PyObject *args = PyTuple_New(1);
 		PyTuple_SetItem(args, 0, PyString_FromString(s.c_str()));
 
@@ -91,8 +91,8 @@ namespace plt {
 		PyObject *list = PyList_New(2);
 		PyObject *args = PyTuple_New(1);
 
-		PyList_SetItem(list, 0, PyFloat_FromDouble(info[0]->NumberValue()));
-		PyList_SetItem(list, 1, PyFloat_FromDouble(info[1]->NumberValue()));
+		PyList_SetItem(list, 0, PyFloat_FromDouble(info[0].As<v8::Number>()->Value()));
+		PyList_SetItem(list, 1, PyFloat_FromDouble(info[1].As<v8::Number>()->Value()));
 		PyTuple_SetItem(args, 0, list);
 
 		PyObject *result = PyObject_CallObject(interpreter::get().xlim, args);
@@ -105,8 +105,8 @@ namespace plt {
 		PyObject *list = PyList_New(2);
 		PyObject *args = PyTuple_New(1);
 
-		PyList_SetItem(list, 0, PyFloat_FromDouble(info[0]->NumberValue()));
-		PyList_SetItem(list, 1, PyFloat_FromDouble(info[1]->NumberValue()));
+		PyList_SetItem(list, 0, PyFloat_FromDouble(info[0].As<v8::Number>()->Value()));
+		PyList_SetItem(list, 1, PyFloat_FromDouble(info[1].As<v8::Number>()->Value()));
 		PyTuple_SetItem(args, 0, list);
 
 		PyObject *result = PyObject_CallObject(interpreter::get().ylim, args);
@@ -118,7 +118,7 @@ namespace plt {
 	void title(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		std::string s = std::string(*v8::String::Utf8Value(isolate, info[0]->ToString()));
+		std::string s = std::string(*v8::String::Utf8Value(isolate, info[0].As<v8::String>()));
 		PyObject *args = PyTuple_New(1);
 		PyTuple_SetItem(args, 0, PyString_FromString(s.c_str()));
 
@@ -131,7 +131,7 @@ namespace plt {
 	void axis(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		std::string s = std::string(*v8::String::Utf8Value(isolate, info[0]->ToString()));
+		std::string s = std::string(*v8::String::Utf8Value(isolate, info[0].As<v8::String>()));
 		PyObject *args = PyTuple_New(1);
 		PyTuple_SetItem(args, 0, PyString_FromString(s.c_str()));
 
@@ -144,7 +144,7 @@ namespace plt {
 	void xlabel(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		std::string s = std::string(*v8::String::Utf8Value(isolate, info[0]->ToString()));
+		std::string s = std::string(*v8::String::Utf8Value(isolate, info[0].As<v8::String>()));
 		PyObject *args = PyTuple_New(1);
 		PyTuple_SetItem(args, 0, PyString_FromString(s.c_str()));
 
@@ -157,7 +157,7 @@ namespace plt {
 	void ylabel(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		std::string s = std::string(*v8::String::Utf8Value(isolate, info[0]->ToString()));
+		std::string s = std::string(*v8::String::Utf8Value(isolate, info[0].As<v8::String>()));
 		PyObject *args = PyTuple_New(1);
 		PyTuple_SetItem(args, 0, PyString_FromString(s.c_str()));
 
