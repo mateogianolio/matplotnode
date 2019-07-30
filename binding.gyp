@@ -3,9 +3,6 @@
     {
       "target_name": "matplotlib",
       "sources": [ "src/matplotlib.cc" ],
-      "include_dirs": [
-        "<!(python -c 'import numpy; print(numpy.get_include())')"
-      ],
       "libraries": [
         "-ldl"
       ],
