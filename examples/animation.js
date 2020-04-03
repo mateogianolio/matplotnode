@@ -1,11 +1,11 @@
-const plt = require('./build/Release/matplotlib');
+const plt = require('../build/Release/matplotlib');
 
 const n = 1000;
 const x = [];
 const y = [];
 const z = [];
 
-for(let i = 0; i < n; i++) {
+for (let i = 0; i < n; i++) {
   x.push(i * i);
   y.push(Math.sin(2 * Math.PI * i / 360.0));
   z.push(Math.log(i));
@@ -19,7 +19,6 @@ for(let i = 0; i < n; i++) {
     plt.named_plot('log(x)', x, z);
 
     // Set x-axis to interval [0,1000000]
-    plt.ylim(0, 10);
     plt.xlim(0, n*n);
 
     // Add graph title

@@ -30,6 +30,9 @@ struct convert<T, typename std::enable_if<std::is_integral<T>::value>::type> {
 			return default_value;
 		}
 
+		printf("bits: %d\n", bits);
+		printf("is_signed: %d\n", is_signed);
+
 		if (bits <= 32) {
 			if (is_signed) {
 				return value.As<v8::Int32>()->Value();
@@ -62,17 +65,15 @@ struct convert<std::string> {
 			return default_value;
 		}
 
-		v8::String::Utf8Value str(isolate, value.As<v8::String>());
-
-		return std::string(*str, str.length());
+		return std::string(*v8::String::Utf8Value(isolate, value.As<v8::String>()));
 	}
 };
 
 // Array<T> => std::vector<T>
 template<typename T>
 struct convert<std::vector<T>> {
-	static std::vector<T> from(v8::Isolate* isolate, v8::Local<v8::Value> value, std::vector<T> default_value = std::vector<T>()) {
-		if (value.IsEmpty() || !value->IsArray()) {
+	static std::vector<T> from(v8::Isolate* isolate, v8::Local<v8::Value> value, std::vector<T> default_value = {}) {
+		if (value.IsEmpty() || (!value->IsArray() && !value->IsTypedArray())) {
 			return default_value;
 		}
 
@@ -94,7 +95,7 @@ struct convert<std::vector<T>> {
 // Object<T, U> => std::map<T, U>
 template<typename T, typename U>
 struct convert<std::map<T, U>> {
-	static std::map<T, U> from(v8::Isolate* isolate, v8::Local<v8::Value> value, std::map<T, U> default_value = std::map<T, U>()) {
+	static std::map<T, U> from(v8::Isolate* isolate, v8::Local<v8::Value> value, std::map<T, U> default_value = {}) {
 		if (value.IsEmpty() || !value->IsObject()) {
 			return default_value;
 		}
@@ -116,3 +117,9 @@ struct convert<std::map<T, U>> {
 		return output;
 	}
 };
+
+template<typename T>
+auto from(v8::Isolate* isolate, v8::Local<v8::Value> value)
+	-> decltype(convert<T>::from(isolate, value)) {
+		return convert<T>::from(isolate, value);
+}

@@ -6,7 +6,7 @@ namespace matplotnode {
 	void backend(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = v8::Isolate::GetCurrent();
 
-		auto name = convert<std::string>::from(isolate, info[0]);
+		auto name = from<std::string>(isolate, info[0]);
 
 		matplotlibcpp::backend(name);
 	}
@@ -14,9 +14,9 @@ namespace matplotnode {
 	void annotate(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = v8::Isolate::GetCurrent();
 
-		auto annotation = convert<std::string>::from(isolate, info[0]);
-		auto x = convert<double>::from(isolate, info[1]);
-		auto y = convert<double>::from(isolate, info[2]);
+		auto annotation = from<std::string>(isolate, info[0]);
+		auto x = from<double>(isolate, info[1]);
+		auto y = from<double>(isolate, info[2]);
 
 		matplotlibcpp::annotate(annotation, x, y);
 	}
@@ -24,9 +24,9 @@ namespace matplotnode {
 	void plot(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto x = convert<std::vector<double>>::from(isolate, info[0]);
-		auto y = convert<std::vector<double>>::from(isolate, info[1]);
-		auto keywords = convert<std::map<std::string, std::string>>::from(isolate, info[2]);
+		auto x = from<std::vector<double>>(isolate, info[0]);
+		auto y = from<std::vector<double>>(isolate, info[1]);
+		auto keywords = from<std::map<std::string, std::string>>(isolate, info[2]);
 
 		matplotlibcpp::plot(x, y, keywords);
 	}
@@ -34,10 +34,10 @@ namespace matplotnode {
 	void plot3(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto x = convert<std::vector<double>>::from(isolate, info[0]);
-		auto y = convert<std::vector<double>>::from(isolate, info[1]);
-		auto z = convert<std::vector<double>>::from(isolate, info[2]);
-		auto keywords = convert<std::map<std::string, std::string>>::from(isolate, info[3]);
+		auto x = from<std::vector<double>>(isolate, info[0]);
+		auto y = from<std::vector<double>>(isolate, info[1]);
+		auto z = from<std::vector<double>>(isolate, info[2]);
+		auto keywords = from<std::map<std::string, std::string>>(isolate, info[3]);
 
 		matplotlibcpp::plot3(x, y, z, keywords);
 	}
@@ -45,9 +45,9 @@ namespace matplotnode {
 	void stem(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto x = convert<std::vector<double>>::from(isolate, info[0]);
-		auto y = convert<std::vector<double>>::from(isolate, info[1]);
-		auto keywords = convert<std::map<std::string, std::string>>::from(isolate, info[2]);
+		auto x = from<std::vector<double>>(isolate, info[0]);
+		auto y = from<std::vector<double>>(isolate, info[1]);
+		auto keywords = from<std::map<std::string, std::string>>(isolate, info[2]);
 
 		matplotlibcpp::stem(x, y, keywords);
 	}
@@ -55,9 +55,9 @@ namespace matplotnode {
 	void fill(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto x = convert<std::vector<double>>::from(isolate, info[0]);
-		auto y = convert<std::vector<double>>::from(isolate, info[1]);
-		auto keywords = convert<std::map<std::string, std::string>>::from(isolate, info[2]);
+		auto x = from<std::vector<double>>(isolate, info[0]);
+		auto y = from<std::vector<double>>(isolate, info[1]);
+		auto keywords = from<std::map<std::string, std::string>>(isolate, info[2]);
 
 		matplotlibcpp::fill(x, y, keywords);
 	}
@@ -65,10 +65,10 @@ namespace matplotnode {
 	void fill_between(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto x = convert<std::vector<double>>::from(isolate, info[0]);
-		auto y1 = convert<std::vector<double>>::from(isolate, info[1]);
-		auto y2 = convert<std::vector<double>>::from(isolate, info[2]);
-		auto keywords = convert<std::map<std::string, std::string>>::from(isolate, info[3]);
+		auto x = from<std::vector<double>>(isolate, info[0]);
+		auto y1 = from<std::vector<double>>(isolate, info[1]);
+		auto y2 = from<std::vector<double>>(isolate, info[2]);
+		auto keywords = from<std::map<std::string, std::string>>(isolate, info[3]);
 
 		matplotlibcpp::fill_between(x, y1, y2, keywords);
 	}
@@ -76,11 +76,11 @@ namespace matplotnode {
 	void hist(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto y = convert<std::vector<double>>::from(isolate, info[0]);
-		auto bins = convert<long>::from(isolate, info[1], 10);
-		auto color = convert<std::string>::from(isolate, info[2], "b");
-		auto alpha = convert<double>::from(isolate, info[3], 1.0);
-		auto cumulative = convert<bool>::from(isolate, info[4], false);
+		auto y = from<std::vector<double>>(isolate, info[0]);
+		auto bins = from<long>(isolate, info[1]);
+		auto color = from<std::string>(isolate, info[2]);
+		auto alpha = from<double>(isolate, info[3]);
+		auto cumulative = from<bool>(isolate, info[4]);
 
 		matplotlibcpp::hist(y, bins, color, alpha, cumulative);
 	}
@@ -88,10 +88,10 @@ namespace matplotnode {
 	void scatter(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto x = convert<std::vector<double>>::from(isolate, info[0]);
-		auto y = convert<std::vector<double>>::from(isolate, info[1]);
-		auto s = convert<double>::from(isolate, info[2]);
-		auto keywords = convert<std::map<std::string, std::string>>::from(isolate, info[3]);
+		auto x = from<std::vector<double>>(isolate, info[0]);
+		auto y = from<std::vector<double>>(isolate, info[1]);
+		auto s = from<double>(isolate, info[2]);
+		auto keywords = from<std::map<std::string, std::string>>(isolate, info[3]);
 
 		matplotlibcpp::scatter(x, y, s, keywords);
 	}
@@ -99,8 +99,8 @@ namespace matplotnode {
 	void boxplot(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto data = convert<std::vector<double>>::from(isolate, info[0]);
-		auto keywords = convert<std::map<std::string, std::string>>::from(isolate, info[1]);
+		auto data = from<std::vector<double>>(isolate, info[0]);
+		auto keywords = from<std::map<std::string, std::string>>(isolate, info[1]);
 
 		matplotlibcpp::boxplot(data, keywords);
 	}
@@ -108,12 +108,12 @@ namespace matplotnode {
 	void bar(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto x = convert<std::vector<double>>::from(isolate, info[0]);
-		auto y = convert<std::vector<double>>::from(isolate, info[1]);
-		auto ec = convert<std::string>::from(isolate, info[2], "black");
-		auto ls = convert<std::string>::from(isolate, info[3], "-");
-		auto lw = convert<double>::from(isolate, info[4]);
-		auto keywords = convert<std::map<std::string, std::string>>::from(isolate, info[5]);
+		auto x = from<std::vector<double>>(isolate, info[0]);
+		auto y = from<std::vector<double>>(isolate, info[1]);
+		auto ec = from<std::string>(isolate, info[2]);
+		auto ls = from<std::string>(isolate, info[3]);
+		auto lw = from<double>(isolate, info[4]);
+		auto keywords = from<std::map<std::string, std::string>>(isolate, info[5]);
 
 		matplotlibcpp::bar(x, y, ec, ls, lw, keywords);
 	}
@@ -129,11 +129,11 @@ namespace matplotnode {
 	void named_hist(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto label = convert<std::string>::from(isolate, info[0]);
-		auto y = convert<std::vector<double>>::from(isolate, info[1]);
-		auto bins = convert<double>::from(isolate, info[2], 10);
-		auto color = convert<std::string>::from(isolate, info[3], "b");
-		auto alpha = convert<double>::from(isolate, info[4], 1.0);
+		auto label = from<std::string>(isolate, info[0]);
+		auto y = from<std::vector<double>>(isolate, info[1]);
+		auto bins = from<double>(isolate, info[2]);
+		auto color = from<std::string>(isolate, info[3]);
+		auto alpha = from<double>(isolate, info[4]);
 
 		matplotlibcpp::named_hist(label, y, bins, color, alpha);
 	}
@@ -141,11 +141,11 @@ namespace matplotnode {
 	void quiver(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto x = convert<std::vector<double>>::from(isolate, info[0]);
-		auto y = convert<std::vector<double>>::from(isolate, info[1]);
-		auto u = convert<std::vector<double>>::from(isolate, info[2]);
-		auto w = convert<std::vector<double>>::from(isolate, info[3]);
-		auto keywords = convert<std::map<std::string, std::string>>::from(isolate, info[4]);
+		auto x = from<std::vector<double>>(isolate, info[0]);
+		auto y = from<std::vector<double>>(isolate, info[1]);
+		auto u = from<std::vector<double>>(isolate, info[2]);
+		auto w = from<std::vector<double>>(isolate, info[3]);
+		auto keywords = from<std::map<std::string, std::string>>(isolate, info[4]);
 
 		matplotlibcpp::quiver(x, y, u, w, keywords);
 	}
@@ -153,10 +153,10 @@ namespace matplotnode {
 	void errorbar(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto x = convert<std::vector<double>>::from(isolate, info[0]);
-		auto y1 = convert<std::vector<double>>::from(isolate, info[1]);
-		auto yerr = convert<std::vector<double>>::from(isolate, info[2]);
-		auto keywords = convert<std::map<std::string, std::string>>::from(isolate, info[3]);
+		auto x = from<std::vector<double>>(isolate, info[0]);
+		auto y1 = from<std::vector<double>>(isolate, info[1]);
+		auto yerr = from<std::vector<double>>(isolate, info[2]);
+		auto keywords = from<std::map<std::string, std::string>>(isolate, info[3]);
 
 		matplotlibcpp::errorbar(x, y1, yerr, keywords);
 	}
@@ -164,10 +164,10 @@ namespace matplotnode {
 	void named_plot(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto name = convert<std::string>::from(isolate, info[0]);
-		auto x = convert<std::vector<double>>::from(isolate, info[1]);
-		auto y = convert<std::vector<double>>::from(isolate, info[2]);
-		auto format = convert<std::string>::from(isolate, info[3]);
+		auto name = from<std::string>(isolate, info[0]);
+		auto x = from<std::vector<double>>(isolate, info[1]);
+		auto y = from<std::vector<double>>(isolate, info[2]);
+		auto format = from<std::string>(isolate, info[3]);
 
 		matplotlibcpp::named_plot(name, x, y, format);
 	}
@@ -175,10 +175,10 @@ namespace matplotnode {
 	void named_semilogx(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto name = convert<std::string>::from(isolate, info[0]);
-		auto x = convert<std::vector<double>>::from(isolate, info[1]);
-		auto y = convert<std::vector<double>>::from(isolate, info[2]);
-		auto format = convert<std::string>::from(isolate, info[3]);
+		auto name = from<std::string>(isolate, info[0]);
+		auto x = from<std::vector<double>>(isolate, info[1]);
+		auto y = from<std::vector<double>>(isolate, info[2]);
+		auto format = from<std::string>(isolate, info[3]);
 
 		matplotlibcpp::named_semilogx(name, x, y, format);
 	}
@@ -186,10 +186,10 @@ namespace matplotnode {
 	void named_semilogy(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto name = convert<std::string>::from(isolate, info[0]);
-		auto x = convert<std::vector<double>>::from(isolate, info[1]);
-		auto y = convert<std::vector<double>>::from(isolate, info[2]);
-		auto format = convert<std::string>::from(isolate, info[3]);
+		auto name = from<std::string>(isolate, info[0]);
+		auto x = from<std::vector<double>>(isolate, info[1]);
+		auto y = from<std::vector<double>>(isolate, info[2]);
+		auto format = from<std::string>(isolate, info[3]);
 
 		matplotlibcpp::named_semilogy(name, x, y, format);
 	}
@@ -197,10 +197,10 @@ namespace matplotnode {
 	void named_loglog(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto name = convert<std::string>::from(isolate, info[0]);
-		auto x = convert<std::vector<double>>::from(isolate, info[1]);
-		auto y = convert<std::vector<double>>::from(isolate, info[2]);
-		auto format = convert<std::string>::from(isolate, info[3]);
+		auto name = from<std::string>(isolate, info[0]);
+		auto x = from<std::vector<double>>(isolate, info[1]);
+		auto y = from<std::vector<double>>(isolate, info[2]);
+		auto format = from<std::string>(isolate, info[3]);
 
 		matplotlibcpp::named_loglog(name, x, y, format);
 	}
@@ -208,9 +208,9 @@ namespace matplotnode {
 	void text(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = v8::Isolate::GetCurrent();
 
-		auto x = convert<double>::from(isolate, info[0]);
-		auto y = convert<double>::from(isolate, info[1]);
-		auto s = convert<std::string>::from(isolate, info[2]);
+		auto x = from<double>(isolate, info[0]);
+		auto y = from<double>(isolate, info[1]);
+		auto s = from<std::string>(isolate, info[2]);
 
 		matplotlibcpp::text(x, y, s);
 	}
@@ -218,7 +218,7 @@ namespace matplotnode {
 	void figure(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto number = convert<long>::from(isolate, info[0]);
+		auto number = from<long>(isolate, info[0]);
 
 		matplotlibcpp::figure(number);
 	}
@@ -239,8 +239,8 @@ namespace matplotnode {
 	void ylim(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto left = convert<double>::from(isolate, info[0]);
-		auto right = convert<double>::from(isolate, info[1]);
+		auto left = from<double>(isolate, info[0]);
+		auto right = from<double>(isolate, info[1]);
 
 		matplotlibcpp::ylim(left, right);
 	}
@@ -248,8 +248,8 @@ namespace matplotnode {
 	void xlim(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto left = convert<double>::from(isolate, info[0]);
-		auto right = convert<double>::from(isolate, info[1]);
+		auto left = from<double>(isolate, info[0]);
+		auto right = from<double>(isolate, info[1]);
 
 		matplotlibcpp::xlim(left, right);
 	}
@@ -257,8 +257,8 @@ namespace matplotnode {
 	void xticks(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto ticks = convert<std::vector<double>>::from(isolate, info[0]);
-		auto keywords = convert<std::map<std::string, std::string>>::from(isolate, info[1]);
+		auto ticks = from<std::vector<double>>(isolate, info[0]);
+		auto keywords = from<std::map<std::string, std::string>>(isolate, info[1]);
 
 		matplotlibcpp::xticks(ticks, keywords);
 	}
@@ -266,8 +266,8 @@ namespace matplotnode {
 	void yticks(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto ticks = convert<std::vector<double>>::from(isolate, info[0]);
-		auto keywords = convert<std::map<std::string, std::string>>::from(isolate, info[1]);
+		auto ticks = from<std::vector<double>>(isolate, info[0]);
+		auto keywords = from<std::map<std::string, std::string>>(isolate, info[1]);
 
 		matplotlibcpp::yticks(ticks, keywords);
 	}
@@ -275,8 +275,8 @@ namespace matplotnode {
 	void tick_params(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto keywords = convert<std::map<std::string, std::string>>::from(isolate, info[0]);
-		auto axis = convert<std::string>::from(isolate, info[1]);
+		auto keywords = from<std::map<std::string, std::string>>(isolate, info[0]);
+		auto axis = from<std::string>(isolate, info[1]);
 
 		matplotlibcpp::tick_params(keywords, axis);
 	}
@@ -284,9 +284,9 @@ namespace matplotnode {
 	void subplot(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto nrows = convert<long>::from(isolate, info[0]);
-		auto ncols = convert<long>::from(isolate, info[1]);
-		auto plot_number = convert<long>::from(isolate, info[2]);
+		auto nrows = from<long>(isolate, info[0]);
+		auto ncols = from<long>(isolate, info[1]);
+		auto plot_number = from<long>(isolate, info[2]);
 
 		matplotlibcpp::subplot(nrows, ncols, plot_number);
 	}
@@ -294,12 +294,12 @@ namespace matplotnode {
 	void subplot2grid(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto nrows = convert<long>::from(isolate, info[0]);
-		auto ncols = convert<long>::from(isolate, info[1]);
-		auto rowid = convert<long>::from(isolate, info[2]);
-		auto colid = convert<long>::from(isolate, info[3]);
-		auto rowspan = convert<long>::from(isolate, info[4]);
-		auto colspan = convert<long>::from(isolate, info[5]);
+		auto nrows = from<long>(isolate, info[0]);
+		auto ncols = from<long>(isolate, info[1]);
+		auto rowid = from<long>(isolate, info[2]);
+		auto colid = from<long>(isolate, info[3]);
+		auto rowspan = from<long>(isolate, info[4]);
+		auto colspan = from<long>(isolate, info[5]);
 
 		matplotlibcpp::subplot2grid(nrows, ncols, rowid, colid, rowspan, colspan);
 	}
@@ -307,8 +307,8 @@ namespace matplotnode {
 	void title(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto titlestr = convert<std::string>::from(isolate, info[0]);
-		auto keywords = convert<std::map<std::string, std::string>>::from(isolate, info[1]);
+		auto titlestr = from<std::string>(isolate, info[0]);
+		auto keywords = from<std::map<std::string, std::string>>(isolate, info[1]);
 
 		matplotlibcpp::title(titlestr, keywords);
 	}
@@ -316,8 +316,8 @@ namespace matplotnode {
 	void suptitle(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto suptitlestr = convert<std::string>::from(isolate, info[0]);
-		auto keywords = convert<std::map<std::string, std::string>>::from(isolate, info[1]);
+		auto suptitlestr = from<std::string>(isolate, info[0]);
+		auto keywords = from<std::map<std::string, std::string>>(isolate, info[1]);
 
 		matplotlibcpp::suptitle(suptitlestr, keywords);
 	}
@@ -325,7 +325,7 @@ namespace matplotnode {
 	void axis(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto axisstr = convert<std::string>::from(isolate, info[0]);
+		auto axisstr = from<std::string>(isolate, info[0]);
 
 		matplotlibcpp::axis(axisstr);
 	}
@@ -333,10 +333,10 @@ namespace matplotnode {
 	void axvline(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto x = convert<double>::from(isolate, info[0]);
-		auto ymin = convert<double>::from(isolate, info[1]);
-		auto ymax = convert<double>::from(isolate, info[2]);
-		auto keywords = convert<std::map<std::string, std::string>>::from(isolate, info[3]);
+		auto x = from<double>(isolate, info[0]);
+		auto ymin = from<double>(isolate, info[1]);
+		auto ymax = from<double>(isolate, info[2]);
+		auto keywords = from<std::map<std::string, std::string>>(isolate, info[3]);
 
 		matplotlibcpp::axvline(x, ymin, ymax, keywords);
 	}
@@ -344,8 +344,8 @@ namespace matplotnode {
 	void xlabel(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto str = convert<std::string>::from(isolate, info[0]);
-		auto keywords = convert<std::map<std::string, std::string>>::from(isolate, info[1]);
+		auto str = from<std::string>(isolate, info[0]);
+		auto keywords = from<std::map<std::string, std::string>>(isolate, info[1]);
 
 		matplotlibcpp::xlabel(str, keywords);
 	}
@@ -353,17 +353,17 @@ namespace matplotnode {
 	void ylabel(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto str = convert<std::string>::from(isolate, info[0]);
-		auto keywords = convert<std::map<std::string, std::string>>::from(isolate, info[1]);
+		auto str = from<std::string>(isolate, info[0]);
+		auto keywords = from<std::map<std::string, std::string>>(isolate, info[1]);
 
-		matplotlibcpp::xlabel(str, keywords);
+		matplotlibcpp::ylabel(str, keywords);
 	}
 
 	void set_zlabel(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto str = convert<std::string>::from(isolate, info[0]);
-		auto keywords = convert<std::map<std::string, std::string>>::from(isolate, info[1]);
+		auto str = from<std::string>(isolate, info[0]);
+		auto keywords = from<std::map<std::string, std::string>>(isolate, info[1]);
 
 		matplotlibcpp::set_zlabel(str, keywords);
 	}
@@ -371,7 +371,7 @@ namespace matplotnode {
 	void grid(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto flag = convert<bool>::from(isolate, info[0]);
+		auto flag = from<bool>(isolate, info[0]);
 
 		matplotlibcpp::grid(flag);
 	}
@@ -379,7 +379,7 @@ namespace matplotnode {
 	void show(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto block = convert<bool>::from(isolate, info[0]);
+		auto block = from<bool>(isolate, info[0]);
 
 		matplotlibcpp::show(block);
 	}
@@ -399,7 +399,7 @@ namespace matplotnode {
 	void pause(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto interval = convert<double>::from(isolate, info[0]);
+		auto interval = from<double>(isolate, info[0]);
 
 		matplotlibcpp::pause(interval);
 	}
@@ -407,7 +407,7 @@ namespace matplotnode {
 	void save(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto filename = convert<std::string>::from(isolate, info[0]);
+		auto filename = from<std::string>(isolate, info[0]);
 
 		matplotlibcpp::save(filename);
 	}
@@ -423,8 +423,8 @@ namespace matplotnode {
 	void ginput(const v8::FunctionCallbackInfo<v8::Value>& info) {
 		v8::Isolate* isolate = info.GetIsolate();
 
-		auto numClicks = convert<int>::from(isolate, info[0]);
-		auto keywords = convert<std::map<std::string, std::string>>::from(isolate, info[1]);
+		auto numClicks = from<int>(isolate, info[0]);
+		auto keywords = from<std::map<std::string, std::string>>(isolate, info[1]);
 
 		matplotlibcpp::ginput(numClicks, keywords);
 	}

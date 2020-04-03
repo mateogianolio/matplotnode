@@ -12,6 +12,8 @@ for (let i = 0; i < n; ++i) {
   z[i] = Math.log(i);
 }
 
+// TODO: find out why it crashes if uncommenting alpha: '0.4'?
+
 // Prepare keywords to pass to PolyCollection. See
 // https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.fill_between.html
 const keywords = {
