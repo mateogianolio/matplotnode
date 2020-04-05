@@ -1,91 +1,105 @@
 #pragma once
 
-#include <node.h>
+#include <napi.h>
 
 template<typename T, typename Enable = void>
-struct convert;
+struct convert {
+	static bool valid(Napi::Value value);
+	static T from(Napi::Value value);
+};
+
+// String => std::string
+template<>
+struct convert<std::string> {
+	static bool valid(Napi::Value value) {
+		return !value.IsEmpty() && value.IsString();
+	}
+
+	static std::string from(Napi::Value value) {
+		if (!valid(value)) {
+			throw std::invalid_argument("expected String, got something else");
+		}
+
+		return std::string(value.As<Napi::String>());
+	}
+};
 
 // Number => float | double
 template<typename T>
 struct convert<T, typename std::enable_if<std::is_floating_point<T>::value>::type> {
-	static T from(v8::Isolate* isolate, v8::Local<v8::Value> value, T default_value = 0.0) {
-		if (value.IsEmpty() || !value->IsNumber()) {
-			return default_value;
+	static bool valid(Napi::Value value) {
+		return !value.IsEmpty() && value.IsNumber();
+	}
+
+	static T from(Napi::Value value) {
+		if (!valid(value)) {
+			throw std::invalid_argument("floating point conversion expected Number, got something else");
 		}
 
-		return value.As<v8::Number>()->Value();
+		return value.As<Napi::Number>();
 	}
 };
 
 // Number => int32_t | uint32_t | int64_t
 template<typename T>
 struct convert<T, typename std::enable_if<std::is_integral<T>::value>::type> {
-	enum {
-		bits = sizeof(T) * CHAR_BIT,
-		is_signed = std::is_signed<T>::value
-	};
+	static bool valid(Napi::Value value) {
+		return !value.IsEmpty() && value.IsNumber();
+	}
 
-	static T from(v8::Isolate* isolate, v8::Local<v8::Value> value, T default_value = 0) {
-		if (value.IsEmpty() || !value->IsNumber()) {
-			return default_value;
+	static T from(Napi::Value value) {
+		if (!valid(value)) {
+			throw std::invalid_argument("integer conversion expected Number, got something else");
 		}
 
-		printf("bits: %d\n", bits);
-		printf("is_signed: %d\n", is_signed);
+		size_t bits = sizeof(T) * CHAR_BIT;
+		bool is_signed = std::is_signed<T>::value;
 
 		if (bits <= 32) {
 			if (is_signed) {
-				return value.As<v8::Int32>()->Value();
+				return value.As<Napi::Number>().Int32Value();
 			} else {
-				return value.As<v8::Uint32>()->Value();
+				return value.As<Napi::Number>().Uint32Value();
 			}
 		}
 
-		return value.As<v8::Integer>()->Value();
+		return value.As<Napi::Number>().Int64Value();
 	}
 };
 
 // Boolean => bool
 template<>
 struct convert<bool> {
-	static bool from(v8::Isolate* isolate, v8::Local<v8::Value> value, bool default_value = false) {
-		if (value.IsEmpty() || !value->IsBoolean()) {
-			return default_value;
-		}
-
-		return value.As<v8::Boolean>()->Value();
+	static bool valid(Napi::Value value) {
+		return !value.IsEmpty() && value.IsBoolean();
 	}
-};
 
-// String => std::string
-template<>
-struct convert<std::string> {
-	static std::string from(v8::Isolate* isolate, v8::Local<v8::Value> value, std::string default_value = "") {
-		if (value.IsEmpty() || !value->IsString()) {
-			return default_value;
+	static bool from(Napi::Value value) {
+		if (!valid(value)) {
+			throw std::invalid_argument("expected Boolean, got something else");
 		}
 
-		return std::string(*v8::String::Utf8Value(isolate, value.As<v8::String>()));
+		return value.As<Napi::Boolean>();
 	}
 };
 
 // Array<T> => std::vector<T>
 template<typename T>
 struct convert<std::vector<T>> {
-	static std::vector<T> from(v8::Isolate* isolate, v8::Local<v8::Value> value, std::vector<T> default_value = {}) {
-		if (value.IsEmpty() || (!value->IsArray() && !value->IsTypedArray())) {
-			return default_value;
+	static bool valid(Napi::Value value) {
+		return !value.IsEmpty() && value.IsArray();
+	}
+
+	static std::vector<T> from(Napi::Value value) {
+		if (!valid(value)) {
+			throw std::invalid_argument("expected Array, got something else");
 		}
 
-		v8::HandleScope scope(isolate);
-		v8::Local<v8::Context> context = isolate->GetCurrentContext();
-		v8::Local<v8::Array> array = value.As<v8::Array>();
-
+		Napi::Array array = value.As<Napi::Array>();
 		std::vector<T> output;
 
-		output.reserve(array->Length());
-		for (uint32_t i = 0, count = array->Length(); i < count; ++i) {
-			output.emplace_back(convert<T>::from(isolate, array->Get(context, i).ToLocalChecked()));
+		for (uint32_t i = 0, count = array.Length(); i < count; ++i) {
+			output.emplace_back(convert<T>::from(array[i]));
 		}
 
 		return output;
@@ -95,23 +109,24 @@ struct convert<std::vector<T>> {
 // Object<T, U> => std::map<T, U>
 template<typename T, typename U>
 struct convert<std::map<T, U>> {
-	static std::map<T, U> from(v8::Isolate* isolate, v8::Local<v8::Value> value, std::map<T, U> default_value = {}) {
-		if (value.IsEmpty() || !value->IsObject()) {
-			return default_value;
+	static bool valid(Napi::Value value) {
+		return !value.IsEmpty() && value.IsObject();
+	}
+
+	static std::map<T, U> from(Napi::Value value) {
+		if (!valid(value)) {
+			throw std::invalid_argument("expected Object, got something else");
 		}
 
-		v8::HandleScope scope(isolate);
-		v8::Local<v8::Context> context = isolate->GetCurrentContext();
-		v8::Local<v8::Object> object = value.As<v8::Object>();
-		v8::Local<v8::Array> keys = object->GetPropertyNames(context).ToLocalChecked();
-
+		Napi::Object object = value.As<Napi::Object>();
+		Napi::Array keys = object.GetPropertyNames();
 		std::map<T, U> output;
 
-		for (uint32_t i = 0, count = keys->Length(); i < count; ++i) {
-			v8::Local<v8::Value> key = keys->Get(context, i).ToLocalChecked();
-			v8::Local<v8::Value> value = object->Get(context, key).ToLocalChecked();
+		for (uint32_t i = 0, count = keys.Length(); i < count; ++i) {
+			Napi::Value key = keys[i];
+			Napi::Value value = object.Get(key);
 
-			output.emplace(convert<T>::from(isolate, key), convert<U>::from(isolate, value));
+			output.emplace(convert<T>::from(key), convert<U>::from(value));
 		}
 
 		return output;
@@ -119,7 +134,15 @@ struct convert<std::map<T, U>> {
 };
 
 template<typename T>
-auto from(v8::Isolate* isolate, v8::Local<v8::Value> value)
-	-> decltype(convert<T>::from(isolate, value)) {
-		return convert<T>::from(isolate, value);
+auto from(Napi::Value value)
+	-> decltype(convert<T>::from(value)) {
+		return convert<T>::from(value);
+}
+
+template<typename T>
+auto from(Napi::Value value, T default_value)
+	-> decltype(convert<T>::from(value)) {
+		return convert<T>::valid(value)
+			? convert<T>::from(value)
+			: default_value;
 }

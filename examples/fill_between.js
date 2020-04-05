@@ -24,5 +24,3 @@ const keywords = {
 
 plt.fill_between(x, y, z, keywords);
 plt.show();
-
-plt.pause();

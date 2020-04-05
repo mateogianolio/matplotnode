@@ -17,5 +17,3 @@ for (let i = -5; i <= 5; i++) {
 
 plt.quiver(x, y, u, v);
 plt.show();
-
-plt.pause();

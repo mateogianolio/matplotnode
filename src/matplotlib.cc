@@ -1,488 +1,410 @@
-#include <node.h>
+#include <napi.h>
 #include "matplotlibcpp.h"
 #include "convert.h"
 
+namespace plt = matplotlibcpp;
+
 namespace matplotnode {
-	void backend(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = v8::Isolate::GetCurrent();
+	void backend(const Napi::CallbackInfo& info) {
+		auto name = from<std::string>(info[0], "");
 
-		auto name = from<std::string>(isolate, info[0]);
-
-		matplotlibcpp::backend(name);
+		plt::backend(name);
 	}
 
-	void annotate(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = v8::Isolate::GetCurrent();
+	void annotate(const Napi::CallbackInfo& info) {
+		auto annotation = from<std::string>(info[0], "");
+		auto x = from<double>(info[1], {});
+		auto y = from<double>(info[2], {});
 
-		auto annotation = from<std::string>(isolate, info[0]);
-		auto x = from<double>(isolate, info[1]);
-		auto y = from<double>(isolate, info[2]);
-
-		matplotlibcpp::annotate(annotation, x, y);
+		plt::annotate(annotation, x, y);
 	}
 
-	void plot(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void plot(const Napi::CallbackInfo& info) {
+		auto x = from<std::vector<double>>(info[0], {});
+		auto y = from<std::vector<double>>(info[1], {});
+		auto keywords = from<std::map<std::string, std::string>>(info[2], {});
 
-		auto x = from<std::vector<double>>(isolate, info[0]);
-		auto y = from<std::vector<double>>(isolate, info[1]);
-		auto keywords = from<std::map<std::string, std::string>>(isolate, info[2]);
-
-		matplotlibcpp::plot(x, y, keywords);
+		plt::plot(x, y, keywords);
 	}
 
-	void plot3(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void plot3(const Napi::CallbackInfo& info) {
+		auto x = from<std::vector<double>>(info[0], {});
+		auto y = from<std::vector<double>>(info[1], {});
+		auto z = from<std::vector<double>>(info[2], {});
+		auto keywords = from<std::map<std::string, std::string>>(info[3], {});
 
-		auto x = from<std::vector<double>>(isolate, info[0]);
-		auto y = from<std::vector<double>>(isolate, info[1]);
-		auto z = from<std::vector<double>>(isolate, info[2]);
-		auto keywords = from<std::map<std::string, std::string>>(isolate, info[3]);
-
-		matplotlibcpp::plot3(x, y, z, keywords);
+		plt::plot3(x, y, z, keywords);
 	}
 
-	void stem(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void stem(const Napi::CallbackInfo& info) {
+		auto x = from<std::vector<double>>(info[0], {});
+		auto y = from<std::vector<double>>(info[1], {});
+		auto keywords = from<std::map<std::string, std::string>>(info[2], {});
 
-		auto x = from<std::vector<double>>(isolate, info[0]);
-		auto y = from<std::vector<double>>(isolate, info[1]);
-		auto keywords = from<std::map<std::string, std::string>>(isolate, info[2]);
-
-		matplotlibcpp::stem(x, y, keywords);
+		plt::stem(x, y, keywords);
 	}
 
-	void fill(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void fill(const Napi::CallbackInfo& info) {
+		auto x = from<std::vector<double>>(info[0], {});
+		auto y = from<std::vector<double>>(info[1], {});
+		auto keywords = from<std::map<std::string, std::string>>(info[2], {});
 
-		auto x = from<std::vector<double>>(isolate, info[0]);
-		auto y = from<std::vector<double>>(isolate, info[1]);
-		auto keywords = from<std::map<std::string, std::string>>(isolate, info[2]);
-
-		matplotlibcpp::fill(x, y, keywords);
+		plt::fill(x, y, keywords);
 	}
 
-	void fill_between(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void fill_between(const Napi::CallbackInfo& info) {
+		auto x = from<std::vector<double>>(info[0], {});
+		auto y1 = from<std::vector<double>>(info[1], {});
+		auto y2 = from<std::vector<double>>(info[2], {});
+		auto keywords = from<std::map<std::string, std::string>>(info[3], {});
 
-		auto x = from<std::vector<double>>(isolate, info[0]);
-		auto y1 = from<std::vector<double>>(isolate, info[1]);
-		auto y2 = from<std::vector<double>>(isolate, info[2]);
-		auto keywords = from<std::map<std::string, std::string>>(isolate, info[3]);
-
-		matplotlibcpp::fill_between(x, y1, y2, keywords);
+		plt::fill_between(x, y1, y2, keywords);
 	}
 
-	void hist(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void hist(const Napi::CallbackInfo& info) {
+		auto y = from<std::vector<double>>(info[0], {});
+		auto bins = from<long>(info[1], 10);
+		auto color = from<std::string>(info[2], "b");
+		auto alpha = from<double>(info[3], 1.0);
+		auto cumulative = from<bool>(info[4], false);
 
-		auto y = from<std::vector<double>>(isolate, info[0]);
-		auto bins = from<long>(isolate, info[1]);
-		auto color = from<std::string>(isolate, info[2]);
-		auto alpha = from<double>(isolate, info[3]);
-		auto cumulative = from<bool>(isolate, info[4]);
-
-		matplotlibcpp::hist(y, bins, color, alpha, cumulative);
+		plt::hist(y, bins, color, alpha, cumulative);
 	}
 
-	void scatter(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void scatter(const Napi::CallbackInfo& info) {
+		auto x = from<std::vector<double>>(info[0], {});
+		auto y = from<std::vector<double>>(info[1], {});
+		auto s = from<double>(info[2], 1.0);
+		auto keywords = from<std::map<std::string, std::string>>(info[3], {});
 
-		auto x = from<std::vector<double>>(isolate, info[0]);
-		auto y = from<std::vector<double>>(isolate, info[1]);
-		auto s = from<double>(isolate, info[2]);
-		auto keywords = from<std::map<std::string, std::string>>(isolate, info[3]);
-
-		matplotlibcpp::scatter(x, y, s, keywords);
+		plt::scatter(x, y, s, keywords);
 	}
 
-	void boxplot(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void boxplot(const Napi::CallbackInfo& info) {
+		auto data = from<std::vector<double>>(info[0], {});
+		auto keywords = from<std::map<std::string, std::string>>(info[1], {});
 
-		auto data = from<std::vector<double>>(isolate, info[0]);
-		auto keywords = from<std::map<std::string, std::string>>(isolate, info[1]);
-
-		matplotlibcpp::boxplot(data, keywords);
+		plt::boxplot(data, keywords);
 	}
 
-	void bar(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void bar(const Napi::CallbackInfo& info) {
+		auto x = from<std::vector<double>>(info[0], {});
+		auto y = from<std::vector<double>>(info[1], {});
+		auto ec = from<std::string>(info[2], "black");
+		auto ls = from<std::string>(info[3], "-");
+		auto lw = from<double>(info[4], 1.0);
+		auto keywords = from<std::map<std::string, std::string>>(info[5], {});
 
-		auto x = from<std::vector<double>>(isolate, info[0]);
-		auto y = from<std::vector<double>>(isolate, info[1]);
-		auto ec = from<std::string>(isolate, info[2]);
-		auto ls = from<std::string>(isolate, info[3]);
-		auto lw = from<double>(isolate, info[4]);
-		auto keywords = from<std::map<std::string, std::string>>(isolate, info[5]);
-
-		matplotlibcpp::bar(x, y, ec, ls, lw, keywords);
+		plt::bar(x, y, ec, ls, lw, keywords);
 	}
 
-	void subplots_adjust(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void subplots_adjust(const Napi::CallbackInfo& info) {
+		auto keywords = from<std::map<std::string, double>>(info[0], {});
 
-		auto keywords = convert<std::map<std::string, double>>::from(isolate, info[0]);
-
-		matplotlibcpp::subplots_adjust(keywords);
+		plt::subplots_adjust(keywords);
 	}
 
-	void named_hist(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void named_hist(const Napi::CallbackInfo& info) {
+		auto label = from<std::string>(info[0], "");
+		auto y = from<std::vector<double>>(info[1], {});
+		auto bins = from<double>(info[2], 10);
+		auto color = from<std::string>(info[3], "b");
+		auto alpha = from<double>(info[4], 1.0);
 
-		auto label = from<std::string>(isolate, info[0]);
-		auto y = from<std::vector<double>>(isolate, info[1]);
-		auto bins = from<double>(isolate, info[2]);
-		auto color = from<std::string>(isolate, info[3]);
-		auto alpha = from<double>(isolate, info[4]);
-
-		matplotlibcpp::named_hist(label, y, bins, color, alpha);
+		plt::named_hist(label, y, bins, color, alpha);
 	}
 
-	void quiver(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void quiver(const Napi::CallbackInfo& info) {
+		auto x = from<std::vector<double>>(info[0], {});
+		auto y = from<std::vector<double>>(info[1], {});
+		auto u = from<std::vector<double>>(info[2], {});
+		auto w = from<std::vector<double>>(info[3], {});
+		auto keywords = from<std::map<std::string, std::string>>(info[4], {});
 
-		auto x = from<std::vector<double>>(isolate, info[0]);
-		auto y = from<std::vector<double>>(isolate, info[1]);
-		auto u = from<std::vector<double>>(isolate, info[2]);
-		auto w = from<std::vector<double>>(isolate, info[3]);
-		auto keywords = from<std::map<std::string, std::string>>(isolate, info[4]);
-
-		matplotlibcpp::quiver(x, y, u, w, keywords);
+		plt::quiver(x, y, u, w, keywords);
 	}
 
-	void errorbar(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void errorbar(const Napi::CallbackInfo& info) {
+		auto x = from<std::vector<double>>(info[0], {});
+		auto y1 = from<std::vector<double>>(info[1], {});
+		auto yerr = from<std::vector<double>>(info[2], {});
+		auto keywords = from<std::map<std::string, std::string>>(info[3], {});
 
-		auto x = from<std::vector<double>>(isolate, info[0]);
-		auto y1 = from<std::vector<double>>(isolate, info[1]);
-		auto yerr = from<std::vector<double>>(isolate, info[2]);
-		auto keywords = from<std::map<std::string, std::string>>(isolate, info[3]);
-
-		matplotlibcpp::errorbar(x, y1, yerr, keywords);
+		plt::errorbar(x, y1, yerr, keywords);
 	}
 
-	void named_plot(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void named_plot(const Napi::CallbackInfo& info) {
+		auto name = from<std::string>(info[0], "");
+		auto x = from<std::vector<double>>(info[1], {});
+		auto y = from<std::vector<double>>(info[2], {});
+		auto format = from<std::string>(info[3], "");
 
-		auto name = from<std::string>(isolate, info[0]);
-		auto x = from<std::vector<double>>(isolate, info[1]);
-		auto y = from<std::vector<double>>(isolate, info[2]);
-		auto format = from<std::string>(isolate, info[3]);
-
-		matplotlibcpp::named_plot(name, x, y, format);
+		plt::named_plot(name, x, y, format);
 	}
 
-	void named_semilogx(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void named_semilogx(const Napi::CallbackInfo& info) {
+		auto name = from<std::string>(info[0], "");
+		auto x = from<std::vector<double>>(info[1], {});
+		auto y = from<std::vector<double>>(info[2], {});
+		auto format = from<std::string>(info[3], "");
 
-		auto name = from<std::string>(isolate, info[0]);
-		auto x = from<std::vector<double>>(isolate, info[1]);
-		auto y = from<std::vector<double>>(isolate, info[2]);
-		auto format = from<std::string>(isolate, info[3]);
-
-		matplotlibcpp::named_semilogx(name, x, y, format);
+		plt::named_semilogx(name, x, y, format);
 	}
 
-	void named_semilogy(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void named_semilogy(const Napi::CallbackInfo& info) {
+		auto name = from<std::string>(info[0], "");
+		auto x = from<std::vector<double>>(info[1], {});
+		auto y = from<std::vector<double>>(info[2], {});
+		auto format = from<std::string>(info[3], "");
 
-		auto name = from<std::string>(isolate, info[0]);
-		auto x = from<std::vector<double>>(isolate, info[1]);
-		auto y = from<std::vector<double>>(isolate, info[2]);
-		auto format = from<std::string>(isolate, info[3]);
-
-		matplotlibcpp::named_semilogy(name, x, y, format);
+		plt::named_semilogy(name, x, y, format);
 	}
 
-	void named_loglog(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void named_loglog(const Napi::CallbackInfo& info) {
+		auto name = from<std::string>(info[0], "");
+		auto x = from<std::vector<double>>(info[1], {});
+		auto y = from<std::vector<double>>(info[2], {});
+		auto format = from<std::string>(info[3], "");
 
-		auto name = from<std::string>(isolate, info[0]);
-		auto x = from<std::vector<double>>(isolate, info[1]);
-		auto y = from<std::vector<double>>(isolate, info[2]);
-		auto format = from<std::string>(isolate, info[3]);
-
-		matplotlibcpp::named_loglog(name, x, y, format);
+		plt::named_loglog(name, x, y, format);
 	}
 
-	void text(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = v8::Isolate::GetCurrent();
+	void text(const Napi::CallbackInfo& info) {
+		auto x = from<double>(info[0], {});
+		auto y = from<double>(info[1], {});
+		auto s = from<std::string>(info[2], "");
 
-		auto x = from<double>(isolate, info[0]);
-		auto y = from<double>(isolate, info[1]);
-		auto s = from<std::string>(isolate, info[2]);
-
-		matplotlibcpp::text(x, y, s);
+		plt::text(x, y, s);
 	}
 
-	void figure(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void figure(const Napi::CallbackInfo& info) {
+		auto number = from<long>(info[0], 0);
 
-		auto number = from<long>(isolate, info[0]);
-
-		matplotlibcpp::figure(number);
+		plt::figure(number);
 	}
 
-	void figure_size(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void figure_size(const Napi::CallbackInfo& info) {
+		auto w = from<size_t>(info[0], 0);
+		auto h = from<size_t>(info[1], 0);
 
-		auto w = convert<size_t>::from(isolate, info[0]);
-		auto h = convert<size_t>::from(isolate, info[1]);
-
-		matplotlibcpp::figure_size(w, h);
+		plt::figure_size(w, h);
 	}
 
-	void legend(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		matplotlibcpp::legend();
+	void legend(const Napi::CallbackInfo& info) {
+		plt::legend();
 	}
 
-	void ylim(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void ylim(const Napi::CallbackInfo& info) {
+		auto left = from<double>(info[0], 0.0);
+		auto right = from<double>(info[1], 0.0);
 
-		auto left = from<double>(isolate, info[0]);
-		auto right = from<double>(isolate, info[1]);
-
-		matplotlibcpp::ylim(left, right);
+		plt::ylim(left, right);
 	}
 
-	void xlim(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void xlim(const Napi::CallbackInfo& info) {
+		auto left = from<double>(info[0], 0.0);
+		auto right = from<double>(info[1], 0.0);
 
-		auto left = from<double>(isolate, info[0]);
-		auto right = from<double>(isolate, info[1]);
-
-		matplotlibcpp::xlim(left, right);
+		plt::xlim(left, right);
 	}
 
-	void xticks(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void xticks(const Napi::CallbackInfo& info) {
+		auto ticks = from<std::vector<double>>(info[0], {});
+		auto keywords = from<std::map<std::string, std::string>>(info[1], {});
 
-		auto ticks = from<std::vector<double>>(isolate, info[0]);
-		auto keywords = from<std::map<std::string, std::string>>(isolate, info[1]);
-
-		matplotlibcpp::xticks(ticks, keywords);
+		plt::xticks(ticks, keywords);
 	}
 
-	void yticks(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void yticks(const Napi::CallbackInfo& info) {
+		auto ticks = from<std::vector<double>>(info[0], {});
+		auto keywords = from<std::map<std::string, std::string>>(info[1], {});
 
-		auto ticks = from<std::vector<double>>(isolate, info[0]);
-		auto keywords = from<std::map<std::string, std::string>>(isolate, info[1]);
-
-		matplotlibcpp::yticks(ticks, keywords);
+		plt::yticks(ticks, keywords);
 	}
 
-	void tick_params(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void tick_params(const Napi::CallbackInfo& info) {
+		auto keywords = from<std::map<std::string, std::string>>(info[0], {});
+		auto axis = from<std::string>(info[1], "");
 
-		auto keywords = from<std::map<std::string, std::string>>(isolate, info[0]);
-		auto axis = from<std::string>(isolate, info[1]);
-
-		matplotlibcpp::tick_params(keywords, axis);
+		plt::tick_params(keywords, axis);
 	}
 
-	void subplot(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void subplot(const Napi::CallbackInfo& info) {
+		auto nrows = from<long>(info[0], 0);
+		auto ncols = from<long>(info[1], 0);
+		auto plot_number = from<long>(info[2], 0);
 
-		auto nrows = from<long>(isolate, info[0]);
-		auto ncols = from<long>(isolate, info[1]);
-		auto plot_number = from<long>(isolate, info[2]);
-
-		matplotlibcpp::subplot(nrows, ncols, plot_number);
+		plt::subplot(nrows, ncols, plot_number);
 	}
 
-	void subplot2grid(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void subplot2grid(const Napi::CallbackInfo& info) {
+		auto nrows = from<long>(info[0], 0);
+		auto ncols = from<long>(info[1], 0);
+		auto rowid = from<long>(info[2], 0);
+		auto colid = from<long>(info[3], 0);
+		auto rowspan = from<long>(info[4], 0);
+		auto colspan = from<long>(info[5], 0);
 
-		auto nrows = from<long>(isolate, info[0]);
-		auto ncols = from<long>(isolate, info[1]);
-		auto rowid = from<long>(isolate, info[2]);
-		auto colid = from<long>(isolate, info[3]);
-		auto rowspan = from<long>(isolate, info[4]);
-		auto colspan = from<long>(isolate, info[5]);
-
-		matplotlibcpp::subplot2grid(nrows, ncols, rowid, colid, rowspan, colspan);
+		plt::subplot2grid(nrows, ncols, rowid, colid, rowspan, colspan);
 	}
 
-	void title(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void title(const Napi::CallbackInfo& info) {
+		auto titlestr = from<std::string>(info[0], "");
+		auto keywords = from<std::map<std::string, std::string>>(info[1], {});
 
-		auto titlestr = from<std::string>(isolate, info[0]);
-		auto keywords = from<std::map<std::string, std::string>>(isolate, info[1]);
-
-		matplotlibcpp::title(titlestr, keywords);
+		plt::title(titlestr, keywords);
 	}
 
-	void suptitle(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void suptitle(const Napi::CallbackInfo& info) {
+		auto suptitlestr = from<std::string>(info[0], "");
+		auto keywords = from<std::map<std::string, std::string>>(info[1], {});
 
-		auto suptitlestr = from<std::string>(isolate, info[0]);
-		auto keywords = from<std::map<std::string, std::string>>(isolate, info[1]);
-
-		matplotlibcpp::suptitle(suptitlestr, keywords);
+		plt::suptitle(suptitlestr, keywords);
 	}
 
-	void axis(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void axis(const Napi::CallbackInfo& info) {
+		auto axisstr = from<std::string>(info[0], "");
 
-		auto axisstr = from<std::string>(isolate, info[0]);
-
-		matplotlibcpp::axis(axisstr);
+		plt::axis(axisstr);
 	}
 
-	void axvline(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void axvline(const Napi::CallbackInfo& info) {
+		auto x = from<double>(info[0], 0.0);
+		auto ymin = from<double>(info[1], 0.0);
+		auto ymax = from<double>(info[2], 0.0);
+		auto keywords = from<std::map<std::string, std::string>>(info[3], {});
 
-		auto x = from<double>(isolate, info[0]);
-		auto ymin = from<double>(isolate, info[1]);
-		auto ymax = from<double>(isolate, info[2]);
-		auto keywords = from<std::map<std::string, std::string>>(isolate, info[3]);
-
-		matplotlibcpp::axvline(x, ymin, ymax, keywords);
+		plt::axvline(x, ymin, ymax, keywords);
 	}
 
-	void xlabel(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void xlabel(const Napi::CallbackInfo& info) {
+		auto str = from<std::string>(info[0], "");
+		auto keywords = from<std::map<std::string, std::string>>(info[1], {});
 
-		auto str = from<std::string>(isolate, info[0]);
-		auto keywords = from<std::map<std::string, std::string>>(isolate, info[1]);
-
-		matplotlibcpp::xlabel(str, keywords);
+		plt::xlabel(str, keywords);
 	}
 
-	void ylabel(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void ylabel(const Napi::CallbackInfo& info) {
+		auto str = from<std::string>(info[0], "");
+		auto keywords = from<std::map<std::string, std::string>>(info[1], {});
 
-		auto str = from<std::string>(isolate, info[0]);
-		auto keywords = from<std::map<std::string, std::string>>(isolate, info[1]);
-
-		matplotlibcpp::ylabel(str, keywords);
+		plt::ylabel(str, keywords);
 	}
 
-	void set_zlabel(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void set_zlabel(const Napi::CallbackInfo& info) {
+		auto str = from<std::string>(info[0], "");
+		auto keywords = from<std::map<std::string, std::string>>(info[1], {});
 
-		auto str = from<std::string>(isolate, info[0]);
-		auto keywords = from<std::map<std::string, std::string>>(isolate, info[1]);
-
-		matplotlibcpp::set_zlabel(str, keywords);
+		plt::set_zlabel(str, keywords);
 	}
 
-	void grid(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void grid(const Napi::CallbackInfo& info) {
+		auto flag = from<bool>(info[0], false);
 
-		auto flag = from<bool>(isolate, info[0]);
-
-		matplotlibcpp::grid(flag);
+		plt::grid(flag);
 	}
 
-	void show(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void show(const Napi::CallbackInfo& info) {
+		auto block = from<bool>(info[0], true);
 
-		auto block = from<bool>(isolate, info[0]);
-
-		matplotlibcpp::show(block);
+		plt::show(block);
 	}
 
-	void close(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		matplotlibcpp::close();
+	void close(const Napi::CallbackInfo& info) {
+		plt::close();
 	}
 
-	void xkcd(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		matplotlibcpp::xkcd();
+	void xkcd(const Napi::CallbackInfo& info) {
+		plt::xkcd();
 	}
 
-	void draw(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		matplotlibcpp::draw();
+	void draw(const Napi::CallbackInfo& info) {
+		plt::draw();
 	}
 
-	void pause(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void pause(const Napi::CallbackInfo& info) {
+		auto interval = from<double>(info[0], 0.0);
 
-		auto interval = from<double>(isolate, info[0]);
-
-		matplotlibcpp::pause(interval);
+		plt::pause(interval);
 	}
 
-	void save(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void save(const Napi::CallbackInfo& info) {
+		auto filename = from<std::string>(info[0], "");
 
-		auto filename = from<std::string>(isolate, info[0]);
-
-		matplotlibcpp::save(filename);
+		plt::save(filename);
 	}
 
-	void clf(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		matplotlibcpp::clf();
+	void clf(const Napi::CallbackInfo& info) {
+		plt::clf();
 	}
 
-	void ion(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		matplotlibcpp::ion();
+	void ion(const Napi::CallbackInfo& info) {
+		plt::ion();
 	}
 
-	void ginput(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		v8::Isolate* isolate = info.GetIsolate();
+	void ginput(const Napi::CallbackInfo& info) {
+		auto numClicks = from<int>(info[0], 0);
+		auto keywords = from<std::map<std::string, std::string>>(info[1], {});
 
-		auto numClicks = from<int>(isolate, info[0]);
-		auto keywords = from<std::map<std::string, std::string>>(isolate, info[1]);
-
-		matplotlibcpp::ginput(numClicks, keywords);
+		plt::ginput(numClicks, keywords);
 	}
 
-	void tight_layout(const v8::FunctionCallbackInfo<v8::Value>& info) {
-		matplotlibcpp::tight_layout();
+	void tight_layout(const Napi::CallbackInfo& info) {
+		plt::tight_layout();
 	}
 }
 
-void init(v8::Local<v8::Object> exports) {
-	NODE_SET_METHOD(exports, "backend", matplotnode::backend);
-	NODE_SET_METHOD(exports, "annotate", matplotnode::annotate);
-	NODE_SET_METHOD(exports, "plot", matplotnode::plot);
-	NODE_SET_METHOD(exports, "plot3", matplotnode::plot3);
-	NODE_SET_METHOD(exports, "stem", matplotnode::stem);
-	NODE_SET_METHOD(exports, "fill", matplotnode::fill);
-	NODE_SET_METHOD(exports, "fill_between", matplotnode::fill_between);
-	NODE_SET_METHOD(exports, "hist", matplotnode::hist);
-	NODE_SET_METHOD(exports, "scatter", matplotnode::scatter);
-	NODE_SET_METHOD(exports, "boxplot", matplotnode::boxplot);
-	NODE_SET_METHOD(exports, "bar", matplotnode::bar);
-	NODE_SET_METHOD(exports, "subplots_adjust", matplotnode::subplots_adjust);
-	NODE_SET_METHOD(exports, "named_hist", matplotnode::named_hist);
-	NODE_SET_METHOD(exports, "quiver", matplotnode::quiver);
-	NODE_SET_METHOD(exports, "errorbar", matplotnode::errorbar);
-	NODE_SET_METHOD(exports, "named_plot", matplotnode::named_plot);
-	NODE_SET_METHOD(exports, "named_semilogx", matplotnode::named_semilogx);
-	NODE_SET_METHOD(exports, "named_semilogy", matplotnode::named_semilogy);
-	NODE_SET_METHOD(exports, "named_loglog", matplotnode::named_loglog);
-	NODE_SET_METHOD(exports, "text", matplotnode::text);
-	NODE_SET_METHOD(exports, "figure", matplotnode::figure);
-	NODE_SET_METHOD(exports, "figure_size", matplotnode::figure_size);
-	NODE_SET_METHOD(exports, "legend", matplotnode::legend);
-	NODE_SET_METHOD(exports, "ylim", matplotnode::ylim);
-	NODE_SET_METHOD(exports, "xlim", matplotnode::xlim);
-	NODE_SET_METHOD(exports, "xticks", matplotnode::xticks);
-	NODE_SET_METHOD(exports, "yticks", matplotnode::yticks);
-	NODE_SET_METHOD(exports, "tick_params", matplotnode::tick_params);
-	NODE_SET_METHOD(exports, "subplot", matplotnode::subplot);
-	NODE_SET_METHOD(exports, "subplot2grid", matplotnode::subplot2grid);
-	NODE_SET_METHOD(exports, "title", matplotnode::title);
-	NODE_SET_METHOD(exports, "suptitle", matplotnode::suptitle);
-	NODE_SET_METHOD(exports, "axis", matplotnode::axis);
-	NODE_SET_METHOD(exports, "axvline", matplotnode::axvline);
-	NODE_SET_METHOD(exports, "xlabel", matplotnode::xlabel);
-	NODE_SET_METHOD(exports, "ylabel", matplotnode::ylabel);
-	NODE_SET_METHOD(exports, "set_zlabel", matplotnode::set_zlabel);
-	NODE_SET_METHOD(exports, "grid", matplotnode::grid);
-	NODE_SET_METHOD(exports, "show", matplotnode::show);
-	NODE_SET_METHOD(exports, "close", matplotnode::close);
-	NODE_SET_METHOD(exports, "xkcd", matplotnode::xkcd);
-	NODE_SET_METHOD(exports, "draw", matplotnode::draw);
-	NODE_SET_METHOD(exports, "pause", matplotnode::pause);
-	NODE_SET_METHOD(exports, "save", matplotnode::save);
-	NODE_SET_METHOD(exports, "clf", matplotnode::clf);
-	NODE_SET_METHOD(exports, "ion", matplotnode::ion);
-	NODE_SET_METHOD(exports, "ginput", matplotnode::ginput);
-	NODE_SET_METHOD(exports, "tight_layout", matplotnode::tight_layout);
+Napi::Object init(Napi::Env env, Napi::Object exports) {
+	exports.Set(Napi::String::New(env, "backend"), Napi::Function::New(env, matplotnode::backend));
+	exports.Set(Napi::String::New(env, "annotate"), Napi::Function::New(env, matplotnode::annotate));
+	exports.Set(Napi::String::New(env, "plot"), Napi::Function::New(env, matplotnode::plot));
+	exports.Set(Napi::String::New(env, "plot3"), Napi::Function::New(env, matplotnode::plot3));
+	exports.Set(Napi::String::New(env, "stem"), Napi::Function::New(env, matplotnode::stem));
+	exports.Set(Napi::String::New(env, "fill"), Napi::Function::New(env, matplotnode::fill));
+	exports.Set(Napi::String::New(env, "fill_between"), Napi::Function::New(env, matplotnode::fill_between));
+	exports.Set(Napi::String::New(env, "hist"), Napi::Function::New(env, matplotnode::hist));
+	exports.Set(Napi::String::New(env, "scatter"), Napi::Function::New(env, matplotnode::scatter));
+	exports.Set(Napi::String::New(env, "boxplot"), Napi::Function::New(env, matplotnode::boxplot));
+	exports.Set(Napi::String::New(env, "bar"), Napi::Function::New(env, matplotnode::bar));
+	exports.Set(Napi::String::New(env, "subplots_adjust"), Napi::Function::New(env, matplotnode::subplots_adjust));
+	exports.Set(Napi::String::New(env, "named_hist"), Napi::Function::New(env, matplotnode::named_hist));
+	exports.Set(Napi::String::New(env, "quiver"), Napi::Function::New(env, matplotnode::quiver));
+	exports.Set(Napi::String::New(env, "errorbar"), Napi::Function::New(env, matplotnode::errorbar));
+	exports.Set(Napi::String::New(env, "named_plot"), Napi::Function::New(env, matplotnode::named_plot));
+	exports.Set(Napi::String::New(env, "named_semilogx"), Napi::Function::New(env, matplotnode::named_semilogx));
+	exports.Set(Napi::String::New(env, "named_semilogy"), Napi::Function::New(env, matplotnode::named_semilogy));
+	exports.Set(Napi::String::New(env, "named_loglog"), Napi::Function::New(env, matplotnode::named_loglog));
+	exports.Set(Napi::String::New(env, "text"), Napi::Function::New(env, matplotnode::text));
+	exports.Set(Napi::String::New(env, "figure"), Napi::Function::New(env, matplotnode::figure));
+	exports.Set(Napi::String::New(env, "figure_size"), Napi::Function::New(env, matplotnode::figure_size));
+	exports.Set(Napi::String::New(env, "legend"), Napi::Function::New(env, matplotnode::legend));
+	exports.Set(Napi::String::New(env, "ylim"), Napi::Function::New(env, matplotnode::ylim));
+	exports.Set(Napi::String::New(env, "xlim"), Napi::Function::New(env, matplotnode::xlim));
+	exports.Set(Napi::String::New(env, "xticks"), Napi::Function::New(env, matplotnode::xticks));
+	exports.Set(Napi::String::New(env, "yticks"), Napi::Function::New(env, matplotnode::yticks));
+	exports.Set(Napi::String::New(env, "tick_params"), Napi::Function::New(env, matplotnode::tick_params));
+	exports.Set(Napi::String::New(env, "subplot"), Napi::Function::New(env, matplotnode::subplot));
+	exports.Set(Napi::String::New(env, "subplot2grid"), Napi::Function::New(env, matplotnode::subplot2grid));
+	exports.Set(Napi::String::New(env, "title"), Napi::Function::New(env, matplotnode::title));
+	exports.Set(Napi::String::New(env, "suptitle"), Napi::Function::New(env, matplotnode::suptitle));
+	exports.Set(Napi::String::New(env, "axis"), Napi::Function::New(env, matplotnode::axis));
+	exports.Set(Napi::String::New(env, "axvline"), Napi::Function::New(env, matplotnode::axvline));
+	exports.Set(Napi::String::New(env, "xlabel"), Napi::Function::New(env, matplotnode::xlabel));
+	exports.Set(Napi::String::New(env, "ylabel"), Napi::Function::New(env, matplotnode::ylabel));
+	exports.Set(Napi::String::New(env, "set_zlabel"), Napi::Function::New(env, matplotnode::set_zlabel));
+	exports.Set(Napi::String::New(env, "grid"), Napi::Function::New(env, matplotnode::grid));
+	exports.Set(Napi::String::New(env, "show"), Napi::Function::New(env, matplotnode::show));
+	exports.Set(Napi::String::New(env, "close"), Napi::Function::New(env, matplotnode::close));
+	exports.Set(Napi::String::New(env, "xkcd"), Napi::Function::New(env, matplotnode::xkcd));
+	exports.Set(Napi::String::New(env, "draw"), Napi::Function::New(env, matplotnode::draw));
+	exports.Set(Napi::String::New(env, "pause"), Napi::Function::New(env, matplotnode::pause));
+	exports.Set(Napi::String::New(env, "save"), Napi::Function::New(env, matplotnode::save));
+	exports.Set(Napi::String::New(env, "clf"), Napi::Function::New(env, matplotnode::clf));
+	exports.Set(Napi::String::New(env, "ion"), Napi::Function::New(env, matplotnode::ion));
+	exports.Set(Napi::String::New(env, "ginput"), Napi::Function::New(env, matplotnode::ginput));
+	exports.Set(Napi::String::New(env, "tight_layout"), Napi::Function::New(env, matplotnode::tight_layout));
+
+	return exports;
 }
 
-NODE_MODULE(matplotlib, init)
+NODE_API_MODULE(matplotlib, init)

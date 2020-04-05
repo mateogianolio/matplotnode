@@ -2,7 +2,7 @@
   "name": "matplotnode",
   "version": "1.0.0",
   "description": "C++ bindings for Node.js exposing a subset of matplotlib's functionality through the CPython API.",
-  "main": "src/matplotlib.js",
+  "main": "build/Release/matplotlib.node",
   "scripts": {
     "test": "node test.js",
     "install": "node-gyp configure rebuild"
@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/mateogianolio/matplotnode/issues"
   },
-  "homepage": "https://github.com/mateogianolio/matplotnode#readme"
+  "homepage": "https://github.com/mateogianolio/matplotnode#readme",
+  "dependencies": {
+    "node-addon-api": "^2.0.0"
+  }
 }

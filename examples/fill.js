@@ -27,5 +27,3 @@ for (let dt = 0; dt < 2 * Math.PI; dt += Math.PI / 2.0) {
 }
 
 plt.show();
-
-plt.pause();

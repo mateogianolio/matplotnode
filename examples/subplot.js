@@ -3,8 +3,8 @@ const plt = require('../build/Release/matplotlib');
 // Prepare data
 const n = 500;
 const x = Array(n);
-const y = Array(n)
-const z = Array(n)
+const y = Array(n);
+const z = Array(n);
 
 for(let i = 0; i < n; ++i) {
   x[i] = i;
@@ -17,20 +17,12 @@ for(let i = 0; i < n; ++i) {
 // Set the 'super title'
 plt.suptitle('My plot');
 plt.subplot(1, 2, 1);
-plt.plot(x, y, {
-  color: 'red',
-  linestyle: '-',
-});
+plt.plot(x, y);
 plt.subplot(1, 2, 2);
-plt.plot(x, z, {
-  color: 'black',
-  linestyle: '-',
-});
+plt.plot(x, z);
 // Add some text to the plot
 plt.text(100, 90, 'Hello!');
 
 
 // Show plots
 plt.show();
-
-plt.pause();

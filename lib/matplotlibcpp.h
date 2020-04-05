@@ -10,6 +10,7 @@
 #include <cstdint> // <cstdint> requires c++11 support
 #include <functional>
 
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
 #ifndef WITHOUT_NUMPY
@@ -226,7 +227,7 @@ private:
         s_python_function_text = safe_import(pymod, "text");
         s_python_function_suptitle = safe_import(pymod, "suptitle");
         s_python_function_bar = safe_import(pymod,"bar");
-        s_python_function_colorbar = PyObject_GetAttrString(pymod, "colorbar");
+        s_python_function_colorbar = safe_import(pymod, "colorbar");
         s_python_function_subplots_adjust = safe_import(pymod,"subplots_adjust");
 #ifndef WITHOUT_NUMPY
         s_python_function_imshow = safe_import(pymod, "imshow");
@@ -937,12 +938,8 @@ inline bool subplots_adjust(const std::map<std::string, double>& keywords = {})
                              PyFloat_FromDouble(it->second));
     }
 
+    PyObject* res = PyObject_Call(detail::_interpreter::get().s_python_function_subplots_adjust, detail::_interpreter::get().s_python_empty_tuple, kwargs);
 
-    PyObject* plot_args = PyTuple_New(0);
-
-    PyObject* res = PyObject_Call(detail::_interpreter::get().s_python_function_subplots_adjust, plot_args, kwargs);
-
-    Py_DECREF(plot_args);
     Py_DECREF(kwargs);
     if(res) Py_DECREF(res);
 
@@ -1457,10 +1454,9 @@ void xlim(Numeric left, Numeric right)
 
 inline double* xlim()
 {
-    PyObject* args = PyTuple_New(0);
-    PyObject* res = PyObject_CallObject(detail::_interpreter::get().s_python_function_xlim, args);
-    PyObject* left = PyTuple_GetItem(res,0);
-    PyObject* right = PyTuple_GetItem(res,1);
+    PyObject* res = PyObject_CallObject(detail::_interpreter::get().s_python_function_xlim, detail::_interpreter::get().s_python_empty_tuple);
+    PyObject* left = PyTuple_GetItem(res, 0);
+    PyObject* right = PyTuple_GetItem(res, 1);
 
     double* arr = new double[2];
     arr[0] = PyFloat_AsDouble(left);
@@ -1475,10 +1471,9 @@ inline double* xlim()
 
 inline double* ylim()
 {
-    PyObject* args = PyTuple_New(0);
-    PyObject* res = PyObject_CallObject(detail::_interpreter::get().s_python_function_ylim, args);
-    PyObject* left = PyTuple_GetItem(res,0);
-    PyObject* right = PyTuple_GetItem(res,1);
+    PyObject* res = PyObject_CallObject(detail::_interpreter::get().s_python_function_ylim, detail::_interpreter::get().s_python_empty_tuple);
+    PyObject* left = PyTuple_GetItem(res, 0);
+    PyObject* right = PyTuple_GetItem(res, 1);
 
     double* arr = new double[2];
     arr[0] = PyFloat_AsDouble(left);
@@ -1671,6 +1666,7 @@ inline void suptitle(const std::string &suptitlestr, const std::map<std::string,
 {
     PyObject* pysuptitlestr = PyString_FromString(suptitlestr.c_str());
     PyObject* args = PyTuple_New(1);
+
     PyTuple_SetItem(args, 0, pysuptitlestr);
 
     PyObject* kwargs = PyDict_New();
@@ -2184,8 +2180,7 @@ public:
         if(line)
         {
             auto remove_fct = PyObject_GetAttrString(line,"remove");
-            PyObject* args = PyTuple_New(0);
-            PyObject* res = PyObject_CallObject(remove_fct, args);
+            PyObject* res = PyObject_CallObject(remove_fct, detail::_interpreter::get().s_python_empty_tuple);
             if (res) Py_DECREF(res);
         }
         decref();

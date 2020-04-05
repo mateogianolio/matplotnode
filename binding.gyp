@@ -5,10 +5,8 @@
       "sources": [ "src/matplotlib.cc" ],
       "include_dirs": [
         "<!(python3 -c 'import numpy; print(numpy.get_include())')",
+        "<!@(node -p \"require('node-addon-api').include\")",
         "lib"
-      ],
-      "libraries": [
-        "-ldl"
       ],
       "conditions": [
         ['OS=="mac"', {
@@ -25,9 +23,6 @@
           "cflags": [
             "<!(python3-config --cflags)",
             "-fexceptions"
-          ],
-          "libraries": [
-            "<!(python3-config --libs)",
           ]
         }]
       ]

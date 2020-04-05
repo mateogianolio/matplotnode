@@ -10,5 +10,3 @@ for (let i = 0; i < 20; i++) {
 
 plt.bar(x, y);
 plt.show();
-
-plt.pause();
